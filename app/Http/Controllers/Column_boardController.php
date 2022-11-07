@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class Column_boardController extends Controller
@@ -15,9 +16,9 @@ class Column_boardController extends Controller
     public function indexGet(Request $request)
     {
         $test = "test_Column_board";
-        $db_test = "";
+        $articles = Article::all();
 
-        return view('index', compact('test'));
+        return view('index', compact('test', 'articles'));
     }
 
     public function indexPost(Request $request)

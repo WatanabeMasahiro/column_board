@@ -20,3 +20,9 @@ use App\Http\Controllers\Column_boardController;
 
 Route::get('/', [Column_boardController::class, 'indexGet']);
 Route::post('/', [Column_boardController::class, 'indexPost']);
+
+
+
+Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
