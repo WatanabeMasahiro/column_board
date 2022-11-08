@@ -15,26 +15,56 @@
 
 </head>
 <body>
-    <div class="container">
 
-        <p>これはテストです。</p>
-        
-        @if($test)
-        <p>〜⭐︎{{$test}}✨〜</p>
-        @endif
+    <header class="header">     <!-- header -->
+        <div class="cantainer my-3">
 
-        <i class="fas fa-thumbs-up mx-3 bg-info"></i>
+            <div id="siteTitle" class="text-center">
+                <h1 class="bg-primary">
+                    <a href="/" class=" text-dark text-decoration-none">
+                        <b><i class="fa-solid fa-newspaper"></i><span class="mx-2">コラムボード</span><i class="fa-regular fa-newspaper"></i></b>
+                    </a>
+                </h1>
+            </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>テストテーブルhead</th>
-                </tr>
-            </thead>
-            <tbody class="nondata_tbody">
+            <p class="text-center">- HOME -</p>
 
-            </tbody>
-        </table>
+            <p class="text-end border-bottom">ようこそ〇〇さん</p>
+
+            <nav class="text-center">ここにナビゲーションバー</nav>
+
+        </div>
+    </header>                   <!-- /header -->
+
+
+    <div class="container text-center">
+
+        <hr />
+
+        <div class="row">
+            <p>これはテストです。</p>
+            
+            @if($test)
+            <p>〜⭐︎{{$test}}✨〜</p>
+            @endif
+
+            <p><i class="fas fa-thumbs-up mx-3 bg-info"></i></p>
+        </div>
+
+        <div class="row">
+            <table class="table table-hover">
+                <thead class="bg-secondary">
+                    <tr>
+                        <th>テストテーブルhead</th>
+                    </tr>
+                </thead>
+                <tbody class="nondata_tbody">
+
+                </tbody>
+            </table>
+        </div>
+
+        <p class="text-center">ここにページネーション</p>
 
         <!-- <table border="1">
             @foreach ($articles as $article)
@@ -54,7 +84,21 @@
             @endforeach
         </table> -->
 
-    </div>  <!-- container -->
+    </div>
+
+
+
+    <footer class="footer border-top border-bottom border-2">     <!-- footer -->
+
+        <hr class="border border-secondary w-75 mt-3" style="margin: 0 auto;" />
+
+        <div class="container-fluid text-center my-3">
+            <div class="row">
+                <p class="mt-3"><b>Copyright - M-Watanabe, 2022.</b></p>
+            </div>
+        </div>
+
+    </footer>                   <!-- /footer -->
 
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
