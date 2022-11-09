@@ -27,4 +27,45 @@ class Column_boardController extends Controller
     }
     
 
+    public function postGet(Request $request)
+    {
+        $test = "test_Column_board";
+        $articles = Article::all();
+
+        return view('post', compact('test', 'articles'));
+    }
+
+    public function postPost(Request $request)
+    {
+        return redirect('/post');
+    }
+
+
+    public function myArticleGet(Request $request)
+    {
+        $test = "test_Column_board";
+        $articles = Article::all();
+
+        return view('my-article', compact('test', 'articles'));
+    }
+
+    public function myArticlePost(Request $request)
+    {
+        return redirect('/my-article');
+    }
+
+
+    public function myGoodArticleGet(Request $request)
+    {
+        $test = "test_Column_board";
+        $articles = Article::all();
+
+        return view('my-good-article', compact('test', 'articles'));
+    }
+
+    public function myGoodArticlePost(Request $request)
+    {
+        return redirect('/my-good-article');
+    }
+
 }

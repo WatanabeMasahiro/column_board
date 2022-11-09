@@ -33,7 +33,7 @@
             </div>
 
             <!-- *** サブタイトル *** -->
-            <p id="subTitle" class="text-center">- HOME -</p>
+            <p id="subTitle" class="text-center">- 記事投稿 -</p>
 
             <!-- *** ログイン・ログアウト *** -->
             <div class="row border-bottom border-4 mx-5 my-2">
@@ -57,12 +57,12 @@
                             <div class="navbar-nav mx-2 mt-2">                     <!-- d-lg以上 -->
                                 <a class="nav-link d-none d-lg-block" href="/post">記事投稿</a>
                                 <a class="nav-link d-none d-lg-block" href="/my-article">あなたの記事一覧</a>
-                                <a class="nav-link d-none d-lg-block disabled" href="/my-good_article" tabindex="-1" aria-disabled="true">グッドした記事一覧</a>
+                                <a class="nav-link d-none d-lg-block" href="/my-good-article" tabindex="-1" aria-disabled="true">グッドした記事一覧</a>
                             </div>
                             <div class="navbar-nav mx-2 mt-2 border-top border-bottom border-light">     <!-- d-lg以下 -->
                                 <a class="nav-link d-lg-none border-top border-light" href="/post">記事投稿</a>
                                 <a class="nav-link d-lg-none border-top border-light" href="/my-article">あなたの記事一覧</a>
-                                <a class="nav-link d-lg-none border-top border-bottom border-light" href="/my-good_article" tabindex="-1" aria-disabled="true">グッドした記事一覧</a>
+                                <a class="nav-link d-lg-none border-top border-bottom border-light" href="/my-good-article" tabindex="-1" aria-disabled="true">グッドした記事一覧</a>
                             </div>
                         </div>
                     </nav>
@@ -82,20 +82,14 @@
         </div>
 
         <div class="row">
-            <table class="table table-hover border border-3">
+            <table class="table table-hover">
                 <thead class="bg-secondary">
                     <tr>
-                        <th colspan="3">テストテーブルhead</th>
+                        <th>テストテーブルhead</th>
                     </tr>
                 </thead>
                 <tbody class="nondata_tbody">
-                    @foreach ($articles as $article)
-                    <tr>
-                        <td>{{$article->id}}</td>
-                        <td>{{$article->content_title}}</td>
-                        <td>{{$article->created_at}}</td>
-                    </tr>
-                    @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -110,29 +104,18 @@
                 <td>{{$article->created_at}}</td>
             </tr>
             @endforeach
-        </table>  -->
+        </table>
 
         <table border="1" style="width: 60%; margin-top: 10px;">
             @foreach ($articles as $article)
             <tr>
-                <td>{{mb_substr($article->content, 0, 30, "UTF-8")}}</td>
+                <td>{{$article->content}}</td>
             </tr>
             @endforeach
-        </table>
+        </table> -->
 
     </div>
 
-    <!-- 退会ページボタン -->
-    <div class="withdrawal-button my-4">
-        <a href="/withdrawal" class="btn btn-sm mx-4 bg-warning fw-bold">退会ページへ</a>
-    </div>
-
-    <!-- TOPへ戻るボタン -->
-    <div id="topReturnBtn">
-        <a href="#siteTitle" class="btn btn-success btn-lg rounded-pill px-2 py-0" style="font-size:2em;">
-            <i class="fa-solid fa-circle-up"></i>
-        </a>
-    </div>
 
 
     <footer class="footer border-top border-bottom border-2 mb-2">       <!-- footer -->

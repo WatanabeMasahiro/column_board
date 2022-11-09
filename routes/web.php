@@ -21,6 +21,14 @@ use App\Http\Controllers\Column_boardController;
 Route::get('/', [Column_boardController::class, 'indexGet']);
 Route::post('/', [Column_boardController::class, 'indexPost']);
 
+Route::get('post', [Column_boardController::class, 'postGet']);
+Route::post('/post', [Column_boardController::class, 'postPost']);
+
+Route::get('/my-article', [Column_boardController::class, 'myArticleGet']);
+Route::post('/my-article', [Column_boardController::class, 'myArticlePost']);
+
+Route::get('my-good-article', [Column_boardController::class, 'myGoodArticleGet']);
+Route::post('my-good-article/', [Column_boardController::class, 'myGoodArticlePost']);
 
 
 Auth::routes();
