@@ -55,14 +55,14 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                             <div class="navbar-nav mx-2 mt-2">                     <!-- d-lg以上 -->
-                                <a class="nav-link d-none d-lg-block" href="/post">記事投稿</a>
-                                <a class="nav-link d-none d-lg-block" href="/my-article">あなたの記事一覧</a>
-                                <a class="nav-link d-none d-lg-block" href="/my-good-article" tabindex="-1" aria-disabled="true">グッドした記事一覧</a>
+                                <div class="bg-hover-white"><a class="nav-link d-none d-lg-block" href="/post">記事投稿</a></div>
+                                <div class="bg-hover-white"><a class="nav-link d-none d-lg-block" href="/my-article">あなたの記事一覧</a></div>
+                                <div class="bg-hover-white"><a class="nav-link d-none d-lg-block" href="/my-good-article">グッドした記事一覧</a></div>
                             </div>
-                            <div class="navbar-nav mx-2 mt-2 border-top border-bottom border-light">     <!-- d-lg以下 -->
-                                <a class="nav-link d-lg-none border-top border-light" href="/post">記事投稿</a>
-                                <a class="nav-link d-lg-none border-top border-light" href="/my-article">あなたの記事一覧</a>
-                                <a class="nav-link d-lg-none border-top border-bottom border-light" href="/my-good-article" tabindex="-1" aria-disabled="true">グッドした記事一覧</a>
+                                <div class="navbar-nav mx-2 mt-2 border-top border-bottom border-light">     <!-- d-lg以下 -->
+                                <div class="bg-hover-white"><a class="nav-link d-lg-none border-top border-light" href="/post">記事投稿</a></div>
+                                <div class="bg-hover-white"><a class="nav-link d-lg-none border-top border-light" href="/my-article">あなたの記事一覧</a></div>
+                                <div class="bg-hover-white"><a class="nav-link d-lg-none border-top border-bottom border-light" href="/my-good-article">グッドした記事一覧</a></div>
                             </div>
                         </div>
                     </nav>

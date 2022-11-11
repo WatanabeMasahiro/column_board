@@ -16,7 +16,7 @@ class Column_boardController extends Controller
     public function indexGet(Request $request)
     {
         $test = "test_Column_board";
-        $articles = Article::all();
+        $articles = Article::orderBy('id', 'desc')->paginate(5);
 
         return view('index', compact('test', 'articles'));
     }
