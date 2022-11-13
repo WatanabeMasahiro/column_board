@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col"></div>
                 <div id="siteTitle" class="col text-center">
-                    <h1 id="siteTitle_h1" class=" bg-info py-3 rounded-circle">
+                    <h1 id="siteTitle_h1" class="bg-info py-3 rounded-circle">
                         <a href="/" class=" text-dark text-decoration-none">
                             <b><i class="fa-solid fa-newspaper"></i><span class="mx-2">コラムボード</span><i class="fa-regular fa-newspaper"></i></b>
                         </a>
@@ -17,14 +17,14 @@
             </div>
 
             <!-- *** サブタイトル *** -->
-            <p id="subTitle" class="text-center">- HOME -</p>
+            <p id="subTitle" class="text-center">- {{ $sub_title }} -</p>
 
             <!-- *** ログイン・ログアウト *** -->
             <div class="row border-bottom border-4 border-secondary mx-5 my-2">
                 <div class="col d-flex align-items-end mb-2">ようこそ<span class="font-size="1.5em;">〇〇さん</span></div>
                 <div class="col text-end">
                     <a href="/login" class="btn btn-outline-success mb-2">ログイン</a>
-                    <a href="/logout" class="btn btn-outline-danger mb-2">ログアウト</a>
+                    <a id="logout-link" class="logout-links btn btn-outline-danger mb-2" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
                 </div>
             </div>
 

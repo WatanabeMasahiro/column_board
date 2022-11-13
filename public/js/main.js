@@ -4,6 +4,12 @@ $(function() {
     f_tablehead_desc_anchor();
     f_nondata_tablebody();
     f_topReturnBtn();
+    f_faEye_toggleSlash();
+    f_faEye_toggleSlash_addConfirm();
+    f_withdrawalBtn_confirm();
+    f_deleteBtn_confirm();
+    f_user_login_form()
+    f_user_register_form();
 
 
     function f_navBar() {
@@ -62,6 +68,93 @@ $(function() {
             return false;   
         })
     }
+
+
+    function f_faEye_toggleSlash() {
+        $('#btn-toggle-password').on('click', function() {
+            $('.toggle-password').toggleClass("fa-eye-slash").toggleClass("fa-eye");
+            if($('.toggle-password').hasClass('fa-eye-slash') == true) {
+                $('input[name="password"]').attr('type', 'password');
+            }
+            if($('.toggle-password').hasClass('fa-eye') == true) {
+                $('input[name="password"]').attr('type', 'text');
+            }
+        });
+    }
+
+    function f_faEye_toggleSlash_addConfirm() {
+        $('#btn-toggle-pw').on('click', function() {
+            $('.toggle-pw').toggleClass("fa-eye-slash").toggleClass("fa-eye");
+            if($('.toggle-pw').hasClass('fa-eye-slash') == true) {
+                $('input[name="password"]').attr('type', 'password');
+            }
+            if($('.toggle-pw').hasClass('fa-eye') == true) {
+                $('input[name="password"]').attr('type', 'text');
+            }
+        });
+
+        $('#btn-toggle-pwConfirm').on('click', function() {
+            $('.toggle-pwConfirm').toggleClass("fa-eye-slash").toggleClass("fa-eye");
+            if($('.toggle-pwConfirm').hasClass('fa-eye-slash') == true) {
+                $('input[name="password_confirmation"]').attr('type', 'password');
+            }
+            if($('.toggle-pwConfirm').hasClass('fa-eye') == true) {
+                $('input[name="password_confirmation"]').attr('type', 'text');
+            }
+        });
+    }
+
+
+    function f_withdrawalBtn_confirm() {
+        $('.withdrawalBtn').on('click', ()=> {
+            if (!confirm('退会すると、登録している\nすべてのデータが削除されます。')) {
+                return false;
+            }
+            if (!confirm("退会しますか??" )) {
+                return false;
+            }
+        });
+    }
+
+
+    function f_deleteBtn_confirm() {
+        $('button[name="delete"]').on('click', ()=> {
+            if (!confirm("データを削除しますか??" )) {
+                return false;
+            }
+        });
+    }
+
+
+    function f_user_login_form() {
+        if (location.pathname == "/login") {
+            $('.user_login_btn').on('click', function(e) {
+                if( $('input[name="email"]').val()          == false || 
+                    $('input[name="password"]').val()       == false
+                    ) {
+                    e.preventDefault();
+                    alert('未入力の項目を入力してください。');
+                }
+            })
+        }
+    }
+
+
+    function f_user_register_form() {
+        if (location.pathname == "/register") {
+            $('.user_register_btn').on('click', function(e) {
+                if( $('input[name="name"]').val()                       == false || 
+                        $('input[name="email"]').val()                  == false || 
+                        $('input[name="password"]').val()               == false || 
+                        $('input[name="password_confirmation"]').val()  == false 
+                    ) {
+                    e.preventDefault();
+                    alert('未入力の項目を入力してください。');
+                }
+            })
+        }
+    }
+
 
 
 });

@@ -41,6 +41,11 @@ body {
     border-color: #3FFF14;
 }
 
+.home-return-button > .btn-warning {
+    background-color: orange;
+    border-color: orange;
+}
+
 
 /* 極小フォントサイズ例１ */
 .min_fontsize1 {

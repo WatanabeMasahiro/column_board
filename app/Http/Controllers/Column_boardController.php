@@ -44,7 +44,7 @@ class Column_boardController extends Controller
     public function myArticleGet(Request $request)
     {
         $test = "test_Column_board";
-        $articles = Article::all();
+        $articles = Article::orderBy('id', 'desc')->paginate(5);
 
         return view('my-article', compact('test', 'articles'));
     }
@@ -58,7 +58,7 @@ class Column_boardController extends Controller
     public function myGoodArticleGet(Request $request)
     {
         $test = "test_Column_board";
-        $articles = Article::all();
+        $articles = Article::orderBy('id', 'desc')->paginate(5);
 
         return view('my-good-article', compact('test', 'articles'));
     }

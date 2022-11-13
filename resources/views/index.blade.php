@@ -1,15 +1,11 @@
 @include('includes.head')
 
-@include('includes.header')
+
+@include('includes.header', ['sub_title' => 'HOME'])
+
 
 
 <div class="container">
-
-    <!-- *** CSV出力ボタン *** -->
-    <!-- <div class="csv-button my-4">
-        <button type="button" class="btn btn-sm mx-4 mt-2 mb-4 fw-bold" style="background-color:#7DBCD1; font-size:0.6em;">最新順<br />CSVファイル<br />出力</button>
-        <button type="button" class="btn btn-sm mx-4 mt-2 mb-4 fw-bold" style="background-color:#7DBCD1; font-size:0.6em;">グッド順<br />CSVファイル<br />出力</button>
-    </div> -->
 
     <!-- *** ユーザー登録ボタン *** -->
     <div class="row user-register-button my-4 border-bottom border-2 border-secondary">
@@ -104,6 +100,9 @@
 </div>
 
 
+<!-- トップへ戻るボタン -->
 @include('includes.top-return-btn')
+
+
 
 @include('includes.footer')
