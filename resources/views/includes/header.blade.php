@@ -17,17 +17,28 @@
             </div>
 
             <!-- *** サブタイトル *** -->
-            <p id="subTitle" class="text-center">- {{ $sub_title }} -</p>
+            <p id="subTitle" class="text-center mb-4">- {{ $sub_title }} -</p>
 
             <!-- *** ログイン・ログアウト *** -->
             <div class="row border-bottom border-4 border-secondary mx-5 my-2">
-                <div class="col d-flex align-items-end mb-2">ようこそ<span class="font-size="1.5em;">〇〇さん</span></div>
+                @if( Auth::check() )
+                <div class="col d-flex align-items-end mb-2"><span>ようこそ{{$user->name}}さん</span></div>
+                @else
+                <div class="col d-flex align-items-end mb-2"><span>コラムボードへようこそ</span></div>
+                @endif
                 <div class="col text-end">
+                    @if( Auth::check() )
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger mb-2">ログアウト</button>
+                    </form>
+                    @else
                     <a href="/login" class="btn btn-outline-success mb-2">ログイン</a>
-                    <a id="logout-link" class="logout-links btn btn-outline-danger mb-2" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('ログアウト') }}</a>
+                    @endif
                 </div>
             </div>
 
+            @if( Auth::check() )
             <!-- *** ナビゲーションバー *** -->
             <div class="row">
                 <div class="col"></div>
@@ -53,6 +64,7 @@
                 </div>
                 <div class="col"></div>
             </div>
+            @endif
 
         </div>
     </header>                                                       <!-- /header -->

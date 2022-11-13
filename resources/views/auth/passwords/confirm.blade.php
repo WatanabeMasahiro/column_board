@@ -1,6 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+
+<header class="header">                                         <!-- header -->
+    <div class="cantainer my-3">
+
+        <!-- *** タイトル *** -->
+        <div class="row">
+            <div class="col"></div>
+            <div id="siteTitle" class="col text-center">
+                <h1 id="siteTitle_h1" class="bg-info py-3 rounded-circle">
+                    <a href="/login" class=" text-dark text-decoration-none">
+                        <b><i class="fa-solid fa-newspaper"></i><span class="mx-2">コラムボード</span><i class="fa-regular fa-newspaper"></i></b>
+                    </a>
+                </h1>
+            </div>
+            <div class="col"></div>
+        </div>
+
+        <!-- *** サブタイトル *** -->
+        <p id="subTitle" class="text-center">- ユーザーパスワードリセット -</p>
+
+    </div>
+</header>
+
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

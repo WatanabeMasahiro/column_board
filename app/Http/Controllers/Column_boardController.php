@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Column_boardController extends Controller
 {
@@ -15,10 +16,10 @@ class Column_boardController extends Controller
 
     public function indexGet(Request $request)
     {
-        $test = "test_Column_board";
+        $user = Auth::user();
         $articles = Article::orderBy('id', 'desc')->paginate(5);
 
-        return view('index', compact('test', 'articles'));
+        return view('index', compact('user', 'articles'));
     }
 
     public function indexPost(Request $request)
