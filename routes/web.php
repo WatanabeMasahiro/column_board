@@ -21,14 +21,44 @@ use App\Http\Controllers\Column_boardController;
 Route::get('/', [Column_boardController::class, 'indexGet']);
 Route::post('/', [Column_boardController::class, 'indexPost']);
 
-Route::get('post', [Column_boardController::class, 'postGet']);
-Route::post('/post', [Column_boardController::class, 'postPost']);
+Route::get('article', [Column_boardController::class, 'articleGet']);
+Route::post('/article', [Column_boardController::class, 'articlePost']);
 
-Route::get('/my-article', [Column_boardController::class, 'myArticleGet']);
+Route::get('my-article', [Column_boardController::class, 'myArticleGet']);
 Route::post('/my-article', [Column_boardController::class, 'myArticlePost']);
 
 Route::get('my-good-article', [Column_boardController::class, 'myGoodArticleGet']);
-Route::post('my-good-article/', [Column_boardController::class, 'myGoodArticlePost']);
+Route::post('/my-good-article', [Column_boardController::class, 'myGoodArticlePost']);
+
+Route::get('post', [Column_boardController::class, 'postGet']);
+Route::post('/post', [Column_boardController::class, 'postPost']);
+
+Route::get('post_confirm', [Column_boardController::class, 'post_confirmGet']);
+Route::post('/post_confirm', [Column_boardController::class, 'post_confirmPost']);
+
+Route::get('post_report', [Column_boardController::class, 'post_reportGet']);
+Route::post('/post_report', [Column_boardController::class, 'post_reportPost']);
+
+
+Route::get('update', [Column_boardController::class, 'updateGet']);
+Route::post('/update', [Column_boardController::class, 'updatePost']);
+
+Route::get('update_confirm', [Column_boardController::class, 'update_confirmGet']);
+Route::post('/update_confirm', [Column_boardController::class, 'update_confirmPost']);
+
+Route::get('update_report', [Column_boardController::class, 'update_reportGet']);
+Route::post('/update_report', [Column_boardController::class, 'update_reportPost']);
+
+
+Route::get('delete_confirm', [Column_boardController::class, 'delete_confirmGet']);
+Route::post('/delete_confirm', [Column_boardController::class, 'delete_confirmPost']);
+
+Route::get('delete_report', [Column_boardController::class, 'delete_reportGet']);
+Route::post('/delete_report', [Column_boardController::class, 'delete_reportPost']);
+
+
+Route::get('withdrawal', [Column_boardController::class, 'withdrawalGet']);
+Route::post('/withdrawal', [Column_boardController::class, 'withdrawalPost']);
 
 
 Auth::routes();

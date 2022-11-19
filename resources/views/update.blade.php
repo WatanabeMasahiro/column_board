@@ -1,7 +1,7 @@
 @include('includes.head')
 
 
-@include('includes.header', ['sub_title' => '記事投稿'])
+@include('includes.header', ['sub_title' => '記事更新'])
 
 
 
@@ -30,7 +30,7 @@
             <label class="">関連ワード③：</label>
             <input type="text" name="related_word3" />
 
-            <button type="submit" class="btn btn-secondary">記事投稿</button>
+            <button type="submit" class="btn btn-secondary">更新</button>
             <input type="reset" value="クリア" />
 
         </form>

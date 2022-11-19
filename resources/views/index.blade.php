@@ -9,11 +9,11 @@
 
     <!-- *** ユーザー登録ボタン *** -->
     <div class="row user-register-button my-4 border-bottom border-2 border-secondary">
-                <div class="col"><a href="/register" class="btn btn-sm btn-danger px-3 mx-4 mt-2 mb-4 fw-bold" style="color:#111111;">ユーザー<br />登録</a></div>
-                <div class="col d-flex text-center align-items-center justify-content-center mb-3"><span style="font-size:0.8em;">ユーザー登録すると<br />記事投稿ができるようになります</span></div>
-                <div class="col"></div>
-            </tr>
-        </table>
+        <div class="col"><a href="/register" class="btn btn-sm btn-danger px-3 mx-4 mt-2 mb-4 fw-bold" style="color:#111111;">ユーザー<br />登録</a></div>
+        @unless( Auth::check() )
+        <div class="col d-flex text-center align-items-center justify-content-center mb-3"><span style="font-size:0.8em;">ユーザー登録すると<br />記事投稿ができるようになります</span></div>
+        @endunless
+        <div class="col"></div>
     </div>
 
 
@@ -91,6 +91,7 @@
         <!-- ページネーション -->
         <div class="d-flex text-center align-items-center justify-content-center mt-3 mb-5">{{ $articles->appends(request()->input())->links('vendor.pagination.bootstrap-4') }}</div>
     </div>
+
 </div>
 
 
