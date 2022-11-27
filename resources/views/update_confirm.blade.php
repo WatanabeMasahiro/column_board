@@ -42,7 +42,8 @@
         </tr>
     </table>
 
-    <form action="update_report" method="post">
+    <form action="update_report" method="POST">
+        @csrf
         <button type="submit" class="btn btn-secondary">更新</button>
             <input type="reset" value="やり直す" />
     </form>

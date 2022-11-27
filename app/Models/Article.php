@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
+
+    // protected $fillable = ['', '',];
+
+    protected $guarded = [
+        'id',
+    ];
+
+    // public static $rules = ['' => ''];
+
+    // public function comments()
+    // {
+    //     return $this->hasmany('App\Models\Comment')
+    // }
+
 }

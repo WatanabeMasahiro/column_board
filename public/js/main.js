@@ -2,6 +2,7 @@ $(function() {
 
     f_navBar();
     f_tablehead_desc_anchor();
+    f_postDetail_anchor();
     f_nondata_tablebody();
     f_topReturnBtn();
     f_faEye_toggleSlash();
@@ -39,6 +40,15 @@ $(function() {
             $('.good_desc_anchor').find('a').removeAttr('style');
         }
 
+    }
+
+
+    function f_postDetail_anchor() {
+        $('.recordData_content').on('click', function() {
+            var article_id = $(this).find('.article_id').text();
+            $(this).find('.input_post').attr('value', article_id);
+            $(this).find('.form_post').submit();
+        })
     }
 
 

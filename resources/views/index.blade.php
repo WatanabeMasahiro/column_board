@@ -42,16 +42,22 @@
             <table class="table table-hover border border-5 border-secondary fw-bold min_fontsize1" style="background:#cacad0;">
                 <thead class="bg-secondary">
                     <tr class="desc-title-row">
-                        <th colspan="1" style="width: 70px;" class="date_desc_anchor"><a href="/?date_desc=true">最新順▼</a></th>
-                        <th colspan="1" style="width: 70px; background-color: #e0d8d8;" class="good_desc_anchor"><a href="/?good_desc=true" style="color:#aaaaaa;">グッド順▼</a></th>
+                        <th colspan="1" style="width: 80px;" class="date_desc_anchor"><a href="/?date_desc=true">最新順▼</a></th>
+                        <th colspan="1" style="width: 95px; background-color: #e0d8d8;" class="good_desc_anchor"><a href="/?good_desc=true" style="color:#aaaaaa;">グッド順▼</a></th>
                         <th colspan="10" style="background-color: #e0d8d8;"></th>
                         </th>
                     </tr>
                 </thead>
                 <tbody class="nondata_tbody">
                     @foreach ($articles as $article)
-                    <tr>
-                        <td colspan="1"><span>記事No:</span><br />{{$article->id}}</td>
+                    <tr class="recordData_content">
+                        <td colspan="1">
+                            <span>記事No:</span><br /><span class="article_id">{{$article->id}}</span>
+                            <form class="form_post" action="/" method="POST">
+                                @csrf
+                                <input class="input_post" type="hidden" name="article_id" value="" />
+                            </form>
+                        </td>
                         <td colspan="3"><span style="display: inline-block; width:30px;">題名：</span>{{mb_substr($article->content_title, 0, 10, "UTF-8")}}<br /><span style="display: inline-block; width:30px;"></span>{{mb_substr($article->content_title, 10, 10, "UTF-8")}}</td>
                         <td colspan="5"><span style="display: inline-block; width:30px;">本文：</span>{{mb_substr($article->content, 0, 15, "UTF-8")}}<br /><span style="display: inline-block; width:30px;"></span>{{mb_substr($article->content, 15, 15, "UTF-8")}}…</td>
                         <td colspan="1"><i class="fa-solid fa-thumbs-up" style="color:darkorange;"></i><span style="margin-left:2px;">123</span></td>
@@ -67,16 +73,22 @@
             <table class="table table-hover border border-5 border-secondary fw-bold min_fontsize1" style="background:#cacad0;">
                 <thead class="bg-secondary">
                     <tr class="desc-title-row">
-                        <th colspan="1" style="width: 70px;" class="date_desc_anchor"><a href="/?date_desc=true">最新順▼</a></th>
-                        <th colspan="1" style="width: 70px; background-color: #e0d8d8;" class="good_desc_anchor"><a href="/?good_desc=true" style="color:#aaaaaa;">グッド順▼</a></th>
+                        <th colspan="1" style="width: 80px;" class="date_desc_anchor"><a href="/?date_desc=true">最新順▼</a></th>
+                        <th colspan="1" style="width: 95px; background-color: #e0d8d8;" class="good_desc_anchor"><a href="/?good_desc=true" style="color:#aaaaaa;">グッド順▼</a></th>
                         <th colspan="10" style="background-color: #e0d8d8;"></th>
                         </th>
                     </tr>
                 </thead>
                 <tbody class="nondata_tbody">
                     @foreach ($articles as $article)
-                    <tr>
-                        <td colspan="1"><span>記事No:</span><br />{{$article->id}}</td>
+                    <tr class="recordData_content">
+                        <td colspan="1">
+                            <span>記事No:</span><br /><span class="article_id">{{$article->id}}</span>
+                            <form class="form_post" action="/" method="POST">
+                                @csrf
+                                <input class="input_post" type="hidden" name="article_id" value="" />
+                            </form>
+                        </td>
                         <td colspan="3"><span style="display: inline-block;">題名：</span><br />{{mb_substr($article->content_title, 0, 6, "UTF-8")}}<br /><span style="display: inline-block;"></span>{{mb_substr($article->content_title, 6, 6, "UTF-8")}}</td>
                         <td colspan="5"><span style="display: inline-block;">本文：</span><br />{{mb_substr($article->content, 0, 15, "UTF-8")}}<br /><span style="display: inline-block;"></span>{{mb_substr($article->content, 15, 15, "UTF-8")}}…</td>
                         <td colspan="1"><i class="fa-solid fa-thumbs-up" style="color:darkorange;"></i><span style="margin-left:2px;">123</span></td>

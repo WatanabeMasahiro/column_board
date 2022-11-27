@@ -41,13 +41,72 @@ body {
     border-color: #3FFF14;
 }
 
+
+/* HOMEへ戻るボタン */
 .home-return-button > .btn-warning {
     background-color: orange;
     border-color: orange;
 }
 
 
+/* グッドボタン */
+.good-after-btn {
+    background-color: rgb(100, 55, 0);
+    width: 120px;
+}
+
+/* .good-after-btn > i {
+    color: darkorange;
+} */
+
+.good-before-btn {
+    background-color:  orange;
+    width: 120px;
+}
+
+.good-before-btn > i {
+    color: orangered;
+}
+
+
 /* 極小フォントサイズ例１ */
-.min_fontsize1 {
+.min_fontsize_0_6em {
     font-size:0.6em;
-    }
+}
+
+/* 極小フォントサイズ例２ */
+.min_fontsize_0_8em {
+    font-size:0.8em;
+}
+
+/* 極小フォントサイズ例３ */
+.min_fontsize_0_9em {
+    font-size:0.9em;
+}
+
+
+.article-view-table {
+    overflow: hidden scroll;
+}
+
+.article-view-table td{
+    word-wrap: break-word;
+}
+
+
+.comment-border {
+    max-width:400px;
+    border-left: 3px solid yellowgreen;
+}
+
+.comment-title {
+    background-color: yellowgreen;
+}
+
+.comment-box {
+    background-color: antiquewhite;
+}
+
+.comment-form {
+    background-color: rgba(153, 205, 50, 0.4);
+}

@@ -18,7 +18,8 @@
     </div>
 
 
-    <form action="delete_report" method="post">
+    <form action="delete_report" method="POST">
+        @csrf
         <button type="submit" class="btn btn-secondary">削除</button>
         <a href="/article" class="btn btn-light">戻る</a>
     </form>
