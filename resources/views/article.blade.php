@@ -49,7 +49,8 @@
                         <td class="px-5" colspan="12"><span class="min_fontsize_0_9em">{{$article->content}}</span></td>
                     </tr>
                     <tr>
-                        <td class="px-2 text-center" colspan="12"><div><img src="{{ asset('/D1000148.JPG') }}" alt="image" width="300px" height="200px" /></div></td>
+                        <!-- <td class="px-2 text-center" colspan="12"><div><img src="{{ asset('/D1000148.JPG') }}" alt="image" width="300px" height="200px" /></div></td> -->
+                        <td class="px-2 text-center" colspan="12"><div>{{$article->image}}</div></td>
                     </tr>
                     <tr>
                         <td class="px-2" colspan="12">
@@ -82,7 +83,8 @@
                         <td class="px-2" colspan="12"><span class="min_fontsize_0_8em">{{$article->content}}</span></td>
                     </tr>
                     <tr>
-                        <td class="px-2 text-center" colspan="12"><div><img src="{{ asset('/D1000148.JPG') }}" alt="image" width="300px" height="200px" /></div></td>
+                        <!-- <td class="px-2 text-center" colspan="12"><div><img src="{{ asset('/D1000148.JPG') }}" alt="image" width="300px" height="200px" /></div></td> -->
+                        <td class="px-2 text-center" colspan="12"><div>{{$article->image}}</div></td>
                     </tr>
                     <tr>
                         <td class="px-2" colspan="12">

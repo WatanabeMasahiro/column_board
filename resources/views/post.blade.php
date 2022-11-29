@@ -12,11 +12,11 @@
             @csrf
             <div class="row mb-2">
                 <label class=""><span class="text-danger">※</span>タイトル：</label>
-                <input type="text" name="content_title" class="ps-2" />
+                <input type="text" name="content_title" class="ps-2" required />
             </div>
             <div class="row mb-3">
                 <label class=""><span class="text-danger">※</span>本文：</label>
-                <textarea class="" name="content" class="ps-2" ></textarea>
+                <textarea class="" name="content" class="ps-2" required></textarea>
             </div>
 
             <div class="row mb-2">

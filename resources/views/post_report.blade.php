@@ -10,7 +10,7 @@
 
     <div class="row my-5">
         <span class="">投稿しました。</span>
-        <span class="">投稿に失敗しました。</span>
+        <span class="text-secondary">投稿に失敗しました。</span>
     </div>
 
 

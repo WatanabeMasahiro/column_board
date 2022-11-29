@@ -22,4 +22,10 @@ class Article extends Model
     //     return $this->hasmany('App\Models\Comment')
     // }
 
+
+    public function comment_s()
+    {
+        return $this->hasMany('App\Models\Comment');
+    }
+
 }
