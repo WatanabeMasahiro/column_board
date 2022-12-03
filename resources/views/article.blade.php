@@ -13,8 +13,14 @@
 
 
     <div class="text-center my-4 py-4 border-top border-2 border-secondary">
-        <a href="/update" class="btn btn-success me-5 text-dark fw-bold">この記事を<br />更新</a>
-        <a href="/delete_confirm" class="btn btn-danger text-dark ms-5 fw-bold">この記事を<br />削除</a>
+        <form action="article" method="POST">
+            @csrf
+            @foreach ($articles as $article)
+            <input type="hidden" name="article_id" value="{{encrypt($article->id)}}" />
+            @endforeach
+            <button type="submit" name="updateBtn" class="btn btn-success me-5 text-dark fw-bold">この記事を<br />更新</button>
+            <button type="submit" name="deleteBtn" class="btn btn-danger text-dark ms-5 fw-bold">この記事を<br />削除</button>
+        </form>
     </div>
 
     <!-- *** グッドボタン *** -->

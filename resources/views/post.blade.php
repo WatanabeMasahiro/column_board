@@ -7,9 +7,9 @@
 
 <div class="container border-bottom border-2 border-secondary">
 
-    <div class="row" style="max-width:500px; margin: 30px auto;">
+    <div style="max-width:500px; margin: 30px auto;">
         <form action="post" method="POST">
-            @csrf
+        @csrf
             <div class="row mb-2">
                 <label class=""><span class="text-danger">※</span>タイトル：</label>
                 <input type="text" name="content_title" class="ps-2" required />
@@ -47,7 +47,6 @@
             </div>
         </form>
     </div>
-
 
 </div>
 

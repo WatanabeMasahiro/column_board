@@ -52,8 +52,8 @@
         <input type="hidden" name="related_word1" value="{{$post_data['related_word1']}}" />
         <input type="hidden" name="related_word2" value="{{$post_data['related_word2']}}" />
         <input type="hidden" name="related_word3" value="{{$post_data['related_word3']}}" />
-        <button type="submit" name="postBtn" class="btn btn-secondary" value="true">投稿</button>
-        <input type="submit" name="retryBtn" value="やり直す" />
+        <button type="submit" name="postBtn" class="btn btn-secondary me-2">投稿</button>
+        <input type="submit" name="retryBtn" value="やり直す" class="ms-2" />
     </form>
 
 

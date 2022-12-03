@@ -23,7 +23,7 @@
         <div class="d-none d-lg-block col-lg-3">
             <form action="/" method="GET">
                 <input type="text" name="search_text" placeholder="Search for..." class="" style="width: 160px; padding-left:5px;" />
-                <button type="input" class="btn btn-sm btn-primary" alt="検索" title="検索" style="transform: scale(-1, 1); margin-bottom: 2px;"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-sm btn-primary" alt="検索" title="検索" style="transform: scale(-1, 1); margin-bottom: 2px;"><i class="fas fa-search"></i></button>
             </form>
         </div>
 

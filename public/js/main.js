@@ -9,6 +9,7 @@ $(function() {
     f_faEye_toggleSlash_addConfirm();
     f_withdrawalBtn_confirm();
     f_deleteBtn_confirm();
+    f_deleteBtn_confirm2();
     f_user_login_form()
     f_user_register_form();
 
@@ -133,6 +134,16 @@ $(function() {
                 return false;
             }
         });
+    }
+
+    function f_deleteBtn_confirm2() {
+        if (location.pathname == "/delete_confirm") {
+            $('button[name="deleteBtn"]').on('click', function() {
+                if (!confirm("データを削除しますか??" )) {
+                    return false;
+                }
+            });
+        }
     }
 
 

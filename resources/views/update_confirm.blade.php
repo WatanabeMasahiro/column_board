@@ -14,38 +14,47 @@
 
 
     <div class="row">
-        <div>ここで記事の表示確認</div>
+        <div class="bg-info">{{$update_data['content_title']}}</div>
+        <div class="bg-secondary">{{$update_data['content']}}</div>
     </div>
 
 
     <table class="table">
         <tr>
             <th>画像タイトル：</th>
-            <td></td>
+            <td>{{$update_data['image_title']}}</td>
         </tr>
         <tr>
             <th>画像：</th>
-            <td></td>
+            <td>{{$update_data['image']}}</td>
         </tr>
 
         <tr>
             <th>関連ワード①</th>
-            <td></td>
+            <td>{{$update_data['related_word1']}}</td>
         </tr>
         <tr>
             <th>関連ワード②</th>
-            <td></td>
+            <td>{{$update_data['related_word2']}}</td>
         </tr>
         <tr>
             <th>関連ワード③</th>
-            <td></td>
+            <td>{{$update_data['related_word3']}}</td>
         </tr>
     </table>
 
-    <form action="update_report" method="POST">
+    <form action="update_confirm" method="POST">
         @csrf
-        <button type="submit" class="btn btn-secondary">更新</button>
-            <input type="reset" value="やり直す" />
+        <input type="hidden" name="content_title" value="{{$update_data['content_title']}}" />
+        <input type="hidden" name="content" value="{{$update_data['content']}}" />
+        <input type="hidden" name="image_title" value="{{$update_data['image_title']}}" />
+        <input type="hidden" name="image" value="{{$update_data['image']}}" />
+        <input type="hidden" name="related_word1" value="{{$update_data['related_word1']}}" />
+        <input type="hidden" name="related_word2" value="{{$update_data['related_word2']}}" />
+        <input type="hidden" name="related_word3" value="{{$update_data['related_word3']}}" />
+        <input type="hidden" name="article_id" value="{{$update_data['article_id']}}">
+        <button type="submit" name="updateBtn" class="btn btn-secondary me-2">更新</button>
+        <input type="submit" name="retryBtn" value="やり直す" class="ms-2" />
     </form>
 
 

@@ -19,7 +19,7 @@ class Column_boardController extends Controller
     public function indexGet(Request $request)
     {
         $user = Auth::user();
-        $articles = Article::orderBy('id', 'desc')->paginate(5);
+        $articles = Article::where('delete_flag', 0)->orderBy('id', 'desc')->paginate(5);
         return view('index', compact('user', 'articles'));
     }
 
@@ -60,14 +60,30 @@ class Column_boardController extends Controller
         $user = Auth::user();
         $article_id = $request->old('article_id');
         $articles = Article::where('id', $article_id)->get();
+        // もしdelete_flagが１ならhomeにメッセージ付きでリダイレクト
         return view('article', compact('user', 'articles'));
     }
 
     public function articlePost(Request $request)
     {
-        // ここでコメントの処理をする
-        return redirect('/article');
+        // encryptのデベロッパー変更後のエラー画面の遷移先
+        $article_id = array('article_id' => decrypt($request->article_id));
+        $request->merge($article_id);
+        if ($request->has('updateBtn')) {
+            return redirect('/update')->withInput();
+        } else if($request->has('deleteBtn')) {
+            return redirect('/delete_confirm')->withInput();
+        }
+        return redirect('/');
     }
+
+    /* コメント */
+    public function commentPost(Request $request)
+    {
+        // ここでコメントの処理をする(コメントはJSのダイアログで登録確認をする)
+        return redirect('/article')->withInput();   //記事一覧ページで「コメントしました」と点滅表示
+    }
+
 
     /* 投稿 */
     public function postGet(Request $request)
@@ -128,26 +144,46 @@ class Column_boardController extends Controller
     public function updateGet(Request $request)
     {
         $user = Auth::user();
-        $articles = Article::all();
+        $article_id = $request->old('article_id');
+        $articles = Article::where('id', $article_id)->get();
         return view('update', compact('user', 'articles'));
     }
 
     public function updatePost(Request $request)
     {
-        return redirect('/update');
+        return redirect('/update_confirm')->withInput();
     }
 
     /* 更新確認 */
     public function update_confirmGet(Request $request)
     {
+        // バリデーション処理
+
         $user = Auth::user();
-        $articles = Article::all();
-        return view('update_confirm', compact('user', 'articles'));
+        $update_data = Session::get('_old_input');
+        return view('update_confirm', compact('user', 'update_data'));
     }
 
     public function update_confirmPost(Request $request)
     {
-        return redirect('/update_confirm');
+        if($request->has('updateBtn')) {
+            // もしpostで[id]パラメータがないときの処理
+            $user = Auth::user();
+            $article_id = decrypt($request->article_id);
+            if ($article_id == null) {
+                return redirect('/');
+            }
+            $article = Article::find($article_id);
+            $form = $request->all();
+            unset($form['_token']);
+            $article->fill($form)->update();
+            // 更新後の画像ファイル.binの扱い（※まずは違う画像を保存→閲覧で観れるか確認）
+            return redirect('/update_report')->withInput();
+        } else if ($request->has('retryBtn')) {
+            // もどった先でdd()にて値がきていることを確認→old関数を反映？
+            return redirect('/update')->withInput();
+        }
+        return redirect('/');
     }
 
     /* 更新報告 */
@@ -163,17 +199,35 @@ class Column_boardController extends Controller
         return redirect('/update_report');
     }
 
+
     /* 削除確認 */
     public function delete_confirmGet(Request $request)
     {
         $user = Auth::user();
-        $articles = Article::all();
+        $article_id = $request->old('article_id');
+        if ($article_id == null) {
+            return redirect('/');
+        }
+        $articles = Article::where('id', $article_id)->get();
         return view('delete_confirm', compact('user', 'articles'));
     }
 
     public function delete_confirmPost(Request $request)
     {
-        return redirect('/delete_confirm');
+        if ($request->has('deleteBtn')) {
+            // もしpostで[id]パラメータがないときの処理
+            $user = Auth::user();
+            $article_id = decrypt($request->article_id);
+            if ($article_id == null) {
+                return redirect('/');
+            }
+            $field = Article::find($article_id);
+            $field->delete_flag = 1;
+            $field->save();
+            return redirect('/delete_report');
+        } else {
+            return redirect('/');
+        }
     }
 
     /* 削除報告 */
@@ -201,7 +255,7 @@ class Column_boardController extends Controller
         if ($request->has('withdrawalBtn')) {
             $user = Auth::user();
             Auth::logout();
-            // $user->where('id', $user->id)->delete(); /*** 物理削除 ***/
+            // $user->where('id', $user->id)->delete(); /*** <-これは物理削除 ***/
             $param = [
                 'name'              => 'withdrawing_member',
                 'email'             => 'withdrawal@withdrawal',
