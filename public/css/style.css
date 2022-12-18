@@ -15,6 +15,12 @@ body {
 }
 
 
+/* ユーザー名かビジターメッセージ */
+.hello-user {
+    font-size: 0.8em;
+}
+
+
 /* ナビゲーションバー */
 .bg-hover-white :hover {
     background-color: ghostwhite;
@@ -22,6 +28,7 @@ body {
 }
 
 
+/* テーブル処理 */
 .desc-title-row a {
     font-weight: bold;
     color: black;
@@ -32,8 +39,8 @@ body {
 /* トップへ戻るボタン */
 #topReturnBtn {
     position: fixed;
-    right: 50px;
-    bottom: 50px;
+    right: 25px;
+    bottom: 25px;
 }
 
 #topReturnBtn > .btn-success {
@@ -75,13 +82,25 @@ body {
 }
 
 /* 極小フォントサイズ例２ */
+.min_fontsize_0_7em {
+    font-size:0.7em;
+}
+
+/* 極小フォントサイズ例３ */
 .min_fontsize_0_8em {
     font-size:0.8em;
 }
 
-/* 極小フォントサイズ例３ */
+/* 極小フォントサイズ例４ */
 .min_fontsize_0_9em {
     font-size:0.9em;
+}
+
+
+/* 改行 */
+.new-line {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 
@@ -99,12 +118,14 @@ body {
     border-left: 3px solid yellowgreen;
 }
 
-.comment-title {
-    background-color: yellowgreen;
+.comment-border-sm {
+    max-width:380px;
+    border: 3px solid yellowgreen;
+    margin: 0 auto;
 }
 
-.comment-box {
-    background-color: antiquewhite;
+.comment-title {
+    background-color: yellowgreen;
 }
 
 .comment-form {

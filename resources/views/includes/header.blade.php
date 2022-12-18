@@ -19,23 +19,27 @@
             <!-- *** サブタイトル *** -->
             <p id="subTitle" class="text-center mb-4">- {{ $sub_title }} -</p>
 
-            <!-- *** ログイン・ログアウト *** -->
+            <!-- *** ユーザーorビジターへメッセージ *** -->
             <div class="row border-bottom border-4 border-secondary mx-5 my-2">
                 @if( Auth::check() )
-                <div class="col d-flex align-items-end mb-2"><span>ようこそ{{$user->name}}さん</span></div>
+                <div class="mb-1 hello-user d-none d-sm-block">ようこそ<span class="fw-bold text-decoration-underline">{{$user->name}}</span>さん</div>   <!-- d-sm以上 -->
+                <div class="mb-1 hello-user d-sm-none text-center">ようこそ<span class="fw-bold text-decoration-underline">{{$user->name}}</span>さん</div>        <!-- d-sm以下 -->
                 @else
-                <div class="col d-flex align-items-end mb-2"><span>コラムボードへようこそ</span></div>
+                <div class="mb-1 hello-user d-none d-sm-block"><span>コラムボードへようこそ</span></div>   <!-- d-sm以上 -->
+                <div class="mb-1 hello-user d-sm-none text-center"><span>コラムボードへようこそ</span></div>        <!-- d-sm以下 -->
                 @endif
-                <div class="col text-end">
-                    @if( Auth::check() )
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-danger mb-2">ログアウト</button>
-                    </form>
-                    @else
-                    <a href="/login" class="btn btn-outline-success mb-2">ログイン</a>
-                    @endif
-                </div>
+            </div>
+
+            <!-- *** ログイン・ログアウト *** -->
+            <div class="text-end pe-5">
+                @if( Auth::check() )
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger btn-sm mb-2">ログアウト</button>
+                </form>
+                @else
+                <a href="/login" class="btn btn-outline-success btn-sm mb-2">ログイン</a>
+                @endif
             </div>
 
             @if( Auth::check() )

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
@@ -19,14 +20,58 @@ class Column_boardController extends Controller
     public function indexGet(Request $request)
     {
         $user = Auth::user();
-        $articles = Article::where('delete_flag', 0)->orderBy('id', 'desc')->paginate(5);
-        return view('index', compact('user', 'articles'));
+        // $articles = Article::with('article_users')->where('delete_flag', 0);
+        $articles = Article::select('articles.*', 'article_users.article_id')
+            ->selectRaw('COUNT(article_users.article_id) as favorite_no')
+            ->leftJoin('article_users', 'articles.id', '=', 'article_users.article_id')
+            ->groupBy('articles.id')
+            ->where('delete_flag', 0);
+
+        // 検索結果の有無で「記事一覧($articles)」の出力結果を変える
+        $search_text = array('search_text' => trim($request->search_text));
+        $request->merge($search_text);
+        $str_search = $request->search_text;
+        $date_desc1 = $request->date_desc1;
+        $date_desc2 = $request->date_desc2;
+        $good_desc1 = $request->good_desc1;
+        $good_desc2 = $request->good_desc2;
+
+        // 検索機能
+        if(!empty($str_search)) {
+            $articles->where(function($articles) use($str_search){
+                $articles->where('content_title', 'like', "%{$str_search}%")
+                    ->orwhere('content', 'like', "%{$str_search}%")
+                    ->orwhere('image_title', 'like', "%{$str_search}%")
+                    ->orwhere('related_word1', 'like', "%{$str_search}%")
+                    ->orwhere('related_word2', 'like', "%{$str_search}%")
+                    ->orwhere('related_word3', 'like', "%{$str_search}%");
+            });
+        }
+
+        // 最新順・グッド順の機能
+        if($date_desc1 == true || $date_desc2 == true) {
+            $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
+        } else if($good_desc1 == true || $good_desc2 == true) {
+            $articles = $articles->orderBy('favorite_no', 'desc')->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        $paginator_currentpage_10limit_over = false;
+        if($articles->currentPage() > 10){
+            $paginator_currentpage_10limit_over = true;
+        }
+        return view('index', compact('user', 'articles', 'str_search', 'date_desc1', 'date_desc2', 'good_desc1', 'good_desc2', 'paginator_currentpage_10limit_over'));
     }
+
 
     public function indexPost(Request $request)
     {
+        $article_id = array('article_id' => decrypt($request->article_id));
+        $request->merge($article_id);
         return redirect('/article')->withInput();
     }
+
 
     /* ユーザー記事一覧 */
     public function myArticleGet(Request $request)
@@ -60,8 +105,9 @@ class Column_boardController extends Controller
         $user = Auth::user();
         $article_id = $request->old('article_id');
         $articles = Article::where('id', $article_id)->get();
-        // もしdelete_flagが１ならhomeにメッセージ付きでリダイレクト
-        return view('article', compact('user', 'articles'));
+        $comments = Comment::where('article_id', $article_id)->get();
+
+        return view('article', compact('user', 'articles', 'comments'));
     }
 
     public function articlePost(Request $request)
@@ -80,7 +126,12 @@ class Column_boardController extends Controller
     /* コメント */
     public function commentPost(Request $request)
     {
-        // ここでコメントの処理をする(コメントはJSのダイアログで登録確認をする)
+        $article_id = array('article_id' => decrypt($request->article_id));
+        $request->merge($article_id);
+        $comment = new Comment;
+        $form = $request->all();
+        unset($form['_token']);
+        $comment->fill($form)->save();
         return redirect('/article')->withInput();   //記事一覧ページで「コメントしました」と点滅表示
     }
 
@@ -94,6 +145,22 @@ class Column_boardController extends Controller
 
     public function postPost(Request $request)
     {
+        // 拡張子つきでファイル名を取得
+        if($request->file('image')){
+            $image_name = $request->file('image')->getClientOriginalName();
+            // 拡張子のみ
+            $extension = $request->file('image')->getClientOriginalExtension();
+            // 新しいファイル名を生成（形式：元のファイル名_ランダムの英数字.拡張子）
+            $new_image_name = pathinfo($image_name, PATHINFO_FILENAME) . "_" . uniqid() . "." . $extension;
+            // tmpフォルダに画像ファイルを移動する
+            $request->file('image')->move(public_path() . "/img/tmp", $new_image_name);
+            $image = "/img/tmp/" . $new_image_name;
+
+            $request->merge(array('image' => $new_image_name));
+        } else {
+            $request->merge(array('image' => null));
+        }
+
         return redirect('/post_confirm')->withInput();
     }
 
@@ -115,6 +182,7 @@ class Column_boardController extends Controller
             $delete_flag = array('delete_flag' => 0);
             $request->merge($user_id)->merge($delete_flag);
             $article = new Article;
+
             $form = $request->all();
             unset($form['_token']);
             $article->fill($form)->save();

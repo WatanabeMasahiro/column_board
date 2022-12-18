@@ -43,7 +43,7 @@
         </tr>
     </table>
 
-    <form action="post_confirm" method="POST">
+    <form action="post_confirm" method="POST" enctype=“multipart/form-data”>
         @csrf
         <input type="hidden" name="content_title" value="{{$post_data['content_title']}}" />
         <input type="hidden" name="content" value="{{$post_data['content']}}" />

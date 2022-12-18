@@ -1,17 +1,21 @@
 $(function() {
 
     f_navBar();
+    f_search_form_submit();
     f_tablehead_desc_anchor();
+    f_formGet_descAnchor();
     f_postDetail_anchor();
     f_nondata_tablebody();
     f_topReturnBtn();
     f_faEye_toggleSlash();
     f_faEye_toggleSlash_addConfirm();
+    f_commentBtn_confirm();
     f_withdrawalBtn_confirm();
     f_deleteBtn_confirm();
     f_deleteBtn_confirm2();
     f_user_login_form()
     f_user_register_form();
+    f_flashingWarning();
 
 
     function f_navBar() {
@@ -27,20 +31,60 @@ $(function() {
       }
 
 
-    function f_tablehead_desc_anchor() {
+    function f_search_form_submit() {
+        $('.search_btn').on('click', function() {
+            $('.form_get').submit(function() {
+                var search_text_val = $('.search_text').val();
+                var trim_parm = $.trim(search_text_val);
+                $('.search_text').val(trim_parm);
+            })
+        })
+    }
 
-        var url_get_param = location.search;
-        if (url_get_param == "?date_desc=true") {
+
+    function f_tablehead_desc_anchor() {
+        /**
+         * Get the URL parameter value
+         *
+         * @param  name {string} パラメータのキー文字列
+         * @return  url {url} 対象のURL文字列（任意）
+         */
+        function getParam(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        if (getParam('date_desc1') == "true" || getParam('date_desc2') == "true") {
             $('.good_desc_anchor').css('background-color', '#e0d8d8');
             $('.good_desc_anchor').find('a').css('color', '#aaaaaa');
         }
-        if (url_get_param == "?good_desc=true") {
+        if (getParam('good_desc1') == "true" || getParam('good_desc2') == "true") {
             $('.date_desc_anchor').css('background-color', '#e0d8d8');
             $('.date_desc_anchor').find('a').css('color', '#aaaaaa');
             $('.good_desc_anchor').css('background-color', '');
             $('.good_desc_anchor').find('a').removeAttr('style');
         }
+    }
 
+
+    function f_formGet_descAnchor() {
+        $('.date_desc_anchor').on('click', function() {
+            $('.date_desc_input').val('');
+            $('.good_desc_input').val('');
+            $(this).find('.date_desc_input').val('true');
+            $('.form_get').submit();
+        })
+        $('.good_desc_anchor').on('click', function() {
+            $('.date_desc_input').val('');
+            $('.good_desc_input').val('');
+            $(this).find('.good_desc_input').val('true');
+            $('.form_get').submit();
+        })
     }
 
 
@@ -54,8 +98,12 @@ $(function() {
 
 
     function f_nondata_tablebody() {
-        if($('.nondata_tbody').length == true && $('.nondata_tbody').find('tr').length == false) {
-            $('.nondata_tbody').append('<tr><td class="align-middle bg-white" colspan="5" style="font-size: 15px;"><div class="h2 my-5 text-dark"><b>データがありません。</b></div></td></tr>');
+        if($('.if_nondata_tbody').length == true && $('.if_nondata_tbody').find('tr').length == false) {
+            $('.if_nondata_tbody').append('<tr><td class="text-center" style="padding-top: 10.5px;">記事がありません</td></tr>');
+        }
+        if($('.if_nondata_tbody').find('td').text() == '記事がありません') {
+            $('.if_nondata_tbody').closest('table').removeClass('table-hover').css('max-width', '500px').css('margin', '0 auto 16px');
+            $('.if_nondata_tbody').closest('table').find('thead').remove();
         }
     }
 
@@ -113,6 +161,15 @@ $(function() {
                 $('input[name="password_confirmation"]').attr('type', 'text');
             }
         });
+    }
+
+
+    function f_commentBtn_confirm() {
+        $('.comment-btn').on('click', function() {
+            if (!confirm('コメントを投稿します。\n宜しいですか??')) {
+                return false;
+            }
+        })
     }
 
 
@@ -176,6 +233,21 @@ $(function() {
         }
     }
 
+
+    function f_flashingWarning() {
+        var n = 5;
+        var intarval;
+        intarval = setInterval(function(){
+            $('.flashingWarning').fadeOut(1200).fadeIn(1800);
+            n--;
+            if (n == 0) {
+                clearInterval(intarval);
+            }
+        }, 500)
+        setTimeout(function(){
+            $('.flashingWarning').animate({opacity:0, height: 0}, 1000);
+        }, 10000)
+    }
 
 
 });

@@ -22,6 +22,10 @@ class Article extends Model
     //     return $this->hasmany('App\Models\Comment')
     // }
 
+    public function article_users()
+    {
+        return $this->hasmany('App\Models\Article_user');
+    }
 
     public function comment_s()
     {

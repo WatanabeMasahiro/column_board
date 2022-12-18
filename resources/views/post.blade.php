@@ -8,7 +8,7 @@
 <div class="container border-bottom border-2 border-secondary">
 
     <div style="max-width:500px; margin: 30px auto;">
-        <form action="post" method="POST">
+        <form action="post" method="POST" enctype="multipart/form-data">
         @csrf
             <div class="row mb-2">
                 <label class=""><span class="text-danger">※</span>タイトル：</label>
