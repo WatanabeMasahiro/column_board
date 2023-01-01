@@ -5,26 +5,24 @@
 
 
 
-<div class="container">
+<div class="container border-bottom border-2 border-secondary">
 
 
-    <div class="row my-5">
-        <span class="">更新しました。</span>
-        <span class="">更新に失敗しました。</span>
+    <div class="row my-5 text-center">
+        <span class="h4 fw-bold">記事を<br />更新しました</span>
     </div>
 
 
-
 </div>
 
 
-<!-- HOMEへ戻るボタン -->
-@include('includes.home-return-btn')
-
-<!-- 更新をやり直すボタン -->
-<div class="home-return-button my-4">
-    <a href="/update" class="btn btn-secondary mx-4 fw-bold">更新を<br />やり直す</a>
+<!-- HOMEへ戻る・更新をやり直すボタン -->
+<div class="home-return-button my-4 text-center">
+    <a href="/" class="btn btn-warning me-4 fw-bold">HOMEへ<br />戻る</a>
+    <button form="restart" type="submit" name="restartBtn" class="btn btn-secondary ms-4 fw-bold">更新を<br />やり直す</button>
+    <form id="restart" action="update_report" method="POST">@csrf</form>
 </div>
+
 
 <!-- トップへ戻るボタン -->
 @include('includes.top-return-btn')

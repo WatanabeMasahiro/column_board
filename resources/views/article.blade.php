@@ -18,30 +18,61 @@
         @endunless
     </div>
 
+    <!-- *** コメント投稿時の表示テキスト *** -->
     @if(old('comment-btn') == true)
     <div class="flashingWarning text-primary text-center h4 my-0">コメントを投稿しました。</div>
     @endif
 
-    <div class="text-center my-4 py-4 border-top border-2 border-secondary">
-        <form action="article" method="POST">
-            @csrf
-            @foreach ($articles as $article)
-            <input type="hidden" name="article_id" value="{{encrypt($article->id)}}" />
-            @endforeach
-            <button type="submit" name="updateBtn" class="btn btn-success me-4 text-dark fw-bold min_fontsize_0_8em">この記事を<br />更新</button>
-            <button type="submit" name="deleteBtn" class="btn btn-danger text-dark ms-4 fw-bold min_fontsize_0_8em">この記事を<br />削除</button>
-            <div>   <!-- アンカーにしてみる -->
-                <button type="button" class="btn btn-sm px-3 mx-4 mt-2 mb-4 fw-bold" style="background-color:#7DBCD1; font-size:10px; width:80px;">テキスト<br />ファイル<br />出力</button>
-            </div>
-        </form>
+
+    <div class="text-center mt-4 py-4 border-top border-2 border-secondary">
+        <!--- *** CSVファイル出力 *** -->
+        <div  class="text-start mb-4 min_fontsize_0_8em">
+            <a href="#" id="text_file">CSVファイル出力</a>
+            <form action="article_csvfile" method="POST" id="text_file_form">
+                @csrf
+                @foreach ($articles as $article)
+                <input type="hidden" name="article_id" value="{{encrypt($article->id)}}" />
+                @endforeach
+            </form>
+        </div>
+
+        @foreach($articles as $article)
+        @if(Auth::id() == $article->user_id)
+        <!-- *** 記事の更新・削除の遷移ボタン *** -->
+        <div class="mb-4">
+            <form action="article" method="POST">
+                @csrf
+                <button type="submit" name="updateBtn" class="btn btn-success me-4 text-dark fw-bold min_fontsize_0_8em">この記事を<br />更新</button>
+                <button type="submit" name="deleteBtn" class="btn btn-danger text-dark ms-4 fw-bold min_fontsize_0_8em">この記事を<br />削除</button>
+            </form>
+        </div>
+        @endif
+        @endforeach
     </div>
 
 
+    @if(Auth::check())
     <!-- *** グッドボタン *** -->
-    <div class="text-center fw-bold min_fontsize_0_8em">
-        <p class="good-after-btn mb-0"><i class="fa-solid fa-thumbs-up"></i><span style="padding-right: 0.1em;"></span>グッド済</p>
-        <p class="good-before-btn mb-0"><i class="fa-solid fa-thumbs-up"></i><span style="padding-right: 0.1em;"></span>グッドする</p>
+    <div class="fw-bold min_fontsize_0_8em">
+    @foreach($articles as $article)
+    @if(Auth::id() == $article->user_id)
+        <p class="bg-info ps-1 pt-1 fw-light" style="width:120px;"><i class="fa-solid fa-star text-danger ms-1"></i>あなたの記事</p>
+    @else
+        @if($good == true)
+        <form action="good_remove" method="POST">
+            @csrf
+            <button class="border good-after-btn py-2 rounded-pill" type="submit"><i class="fa-solid fa-thumbs-up"></i><span style="padding-right: 0.2em;"></span>グッド済</button>
+        </form>
+        @elseif($good == false)
+        <form action="good" method="POST">
+            @csrf
+            <button class="border good-before-btn py-2 rounded-pill" type="submit"><i class="fa-solid fa-thumbs-up"></i><span style="padding-right: 0.2em;"></span>グッドする</button>
+        </form>
+        @endif
+    @endif
+    @endforeach
     </div>
+    @endif
 
 
     <!-- *** 記事閲覧テーブル *** -->
@@ -54,7 +85,6 @@
                         <th colspan="1" style="width: 130px; background-color: #e0d8d8;">更新日時<br />{{$article->updated_at->format('Y/m/d H:i:s')}}</th>
                         <th colspan="1" style="width: 130px; background-color: #e0d8d8;">投稿日時<br />{{$article->created_at->format('Y/m/d H:i:s')}}</th>
                         <th colspan="10" style="background-color: #e0d8d8;"></th>
-                        </th>
                     </tr>
                 </thead>
                 <tbody class="nondata_tbody">
@@ -87,8 +117,7 @@
                     <tr class="desc-title-row min_fontsize_0_6em">
                         <th colspan="1" style="width: 70px; background-color: #e0d8d8;">更新日時<br />{{$article->updated_at->format('Y/m/d')}}<br />{{$article->updated_at->format('H:i:s')}}</th>
                         <th colspan="1" style="width: 70px; background-color: #e0d8d8;">投稿日時<br />{{$article->created_at->format('Y/m/d')}}<br />{{$article->created_at->format('H:i:s')}}</th>
-                        <th colspan="10" style="background-color: #e0d8d8;"></th>
-                        </th>
+                        <th colspan="12" style="background-color: #e0d8d8;"></th>
                     </tr>
                 </thead>
                 <tbody class="nondata_tbody">

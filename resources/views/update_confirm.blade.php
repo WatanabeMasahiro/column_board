@@ -43,16 +43,9 @@
         </tr>
     </table>
 
+
     <form action="update_confirm" method="POST">
         @csrf
-        <input type="hidden" name="content_title" value="{{$update_data['content_title']}}" />
-        <input type="hidden" name="content" value="{{$update_data['content']}}" />
-        <input type="hidden" name="image_title" value="{{$update_data['image_title']}}" />
-        <input type="hidden" name="image" value="{{$update_data['image']}}" />
-        <input type="hidden" name="related_word1" value="{{$update_data['related_word1']}}" />
-        <input type="hidden" name="related_word2" value="{{$update_data['related_word2']}}" />
-        <input type="hidden" name="related_word3" value="{{$update_data['related_word3']}}" />
-        <input type="hidden" name="article_id" value="{{$update_data['article_id']}}">
         <button type="submit" name="updateBtn" class="btn btn-secondary me-2">更新</button>
         <input type="submit" name="retryBtn" value="やり直す" class="ms-2" />
     </form>

@@ -15,6 +15,7 @@ class Article extends Model
         'id',
     ];
 
+
     // public static $rules = ['' => ''];
 
     // public function comments()

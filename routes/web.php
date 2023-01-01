@@ -31,18 +31,27 @@ Route::post('/my-good-article', [Column_boardController::class, 'myGoodArticlePo
 /* 記事閲覧(記事の詳細内容) */
 Route::get('article', [Column_boardController::class, 'articleGet']);
 Route::post('/article', [Column_boardController::class, 'articlePost'])->middleware('auth');
+
 /* コメント */
 Route::post('/comment', [Column_boardController::class, 'commentPost']);
 
+/* CSVファイル出力 */
+Route::post('/article_csvfile', [Column_boardController::class, 'csvfilePost']);
+
+/* GOODする処理 */
+Route::post('/good', [Column_boardController::class, 'goodPost'])->middleware('auth');
+/* GOODを外す処理 */
+Route::post('/good_remove', [Column_boardController::class, 'good_removePost'])->middleware('auth');
+
 /* 投稿 */
-Route::get('post', [Column_boardController::class, 'postGet'])->middleware('auth')->middleware('auth');
-Route::post('/post', [Column_boardController::class, 'postPost'])->middleware('auth')->middleware('auth');
+Route::get('post', [Column_boardController::class, 'postGet'])->middleware('auth');
+Route::post('/post', [Column_boardController::class, 'postPost'])->middleware('auth');
 
-Route::get('post_confirm', [Column_boardController::class, 'post_confirmGet'])->middleware('auth')->middleware('auth');
-Route::post('/post_confirm', [Column_boardController::class, 'post_confirmPost'])->middleware('auth')->middleware('auth');
+Route::get('post_confirm', [Column_boardController::class, 'post_confirmGet'])->middleware('auth');
+Route::post('/post_confirm', [Column_boardController::class, 'post_confirmPost'])->middleware('auth');
 
-Route::get('post_report', [Column_boardController::class, 'post_reportGet'])->middleware('auth')->middleware('auth');
-Route::post('/post_report', [Column_boardController::class, 'post_reportPost'])->middleware('auth')->middleware('auth');
+Route::get('post_report', [Column_boardController::class, 'post_reportGet'])->middleware('auth');
+Route::post('/post_report', [Column_boardController::class, 'post_reportPost'])->middleware('auth');
 
 /* 更新 */
 Route::get('update', [Column_boardController::class, 'updateGet'])->middleware('auth');

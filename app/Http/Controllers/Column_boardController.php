@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Article_user;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class Column_boardController extends Controller
@@ -16,11 +18,15 @@ class Column_boardController extends Controller
     //     ;
     // }
 
+
     /* 記事一覧 */
     public function indexGet(Request $request)
     {
+        if($request->session()->has('article_id')) {
+            $request->session()->remove('article_id');
+        }
+
         $user = Auth::user();
-        // $articles = Article::with('article_users')->where('delete_flag', 0);
         $articles = Article::select('articles.*', 'article_users.article_id')
             ->selectRaw('COUNT(article_users.article_id) as favorite_no')
             ->leftJoin('article_users', 'articles.id', '=', 'article_users.article_id')
@@ -57,6 +63,7 @@ class Column_boardController extends Controller
             $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
         }
 
+        // ページネーション
         $paginator_currentpage_10limit_over = false;
         if($articles->currentPage() > 10){
             $paginator_currentpage_10limit_over = true;
@@ -67,8 +74,7 @@ class Column_boardController extends Controller
 
     public function indexPost(Request $request)
     {
-        $article_id = array('article_id' => decrypt($request->article_id));
-        $request->merge($article_id);
+        $request->session()->put('article_id', $request->article_id);
         return redirect('/article')->withInput();
     }
 
@@ -81,10 +87,12 @@ class Column_boardController extends Controller
         return view('my-article', compact('user', 'articles'));
     }
 
+
     public function myArticlePost(Request $request)
     {
         return redirect('/my-article');
     }
+
 
     /* ユーザーがグッドした記事一覧 */
     public function myGoodArticleGet(Request $request)
@@ -94,45 +102,153 @@ class Column_boardController extends Controller
         return view('my-good-article', compact('user', 'articles'));
     }
 
+
     public function myGoodArticlePost(Request $request)
     {
         return redirect('/my-good-article');
     }
 
+
     /* 記事閲覧(記事の詳細内容) */
     public function articleGet(Request $request)
     {
         $user = Auth::user();
-        $article_id = $request->old('article_id');
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        } 
+        $article_id = decrypt($request->session()->get('article_id'));
         $articles = Article::where('id', $article_id)->get();
         $comments = Comment::where('article_id', $article_id)->get();
 
-        return view('article', compact('user', 'articles', 'comments'));
+        $form = [   'user_id' => Auth::id(),
+                    'article_id' => $article_id,
+                ];
+        $good = false;
+        if(Article_user::where($form)->exists()) {
+            $good = true;
+        }
+        return view('article', compact('user', 'articles', 'comments', 'good'));
     }
+
 
     public function articlePost(Request $request)
     {
-        // encryptのデベロッパー変更後のエラー画面の遷移先
-        $article_id = array('article_id' => decrypt($request->article_id));
-        $request->merge($article_id);
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        } 
         if ($request->has('updateBtn')) {
             return redirect('/update')->withInput();
-        } else if($request->has('deleteBtn')) {
+        } else if ($request->has('deleteBtn')) {
             return redirect('/delete_confirm')->withInput();
         }
         return redirect('/');
     }
 
+
     /* コメント */
     public function commentPost(Request $request)
     {
-        $article_id = array('article_id' => decrypt($request->article_id));
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        } 
+        $article_id = array('article_id' => decrypt($request->session()->get('article_id')));
         $request->merge($article_id);
         $comment = new Comment;
         $form = $request->all();
         unset($form['_token']);
         $comment->fill($form)->save();
-        return redirect('/article')->withInput();   //記事一覧ページで「コメントしました」と点滅表示
+        return redirect('/article')->withInput();
+    }
+
+
+    public function csvfilePost(Request $request)
+    {
+        // カラムの作成
+        $head = ['タイトル', '本文'];
+        // データの作成
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        } 
+        $article_id = decrypt($request->session()->get('article_id'));
+        $articles = Article::select('content_title', 'content')->where('id', $article_id)->get()->toArray();
+        // ファイル名
+        $title = $articles[0]['content_title'];
+        $now_date = now()->format("Y-m-d_H-i-s");
+        $file_name = 'storage/csv/'.$title.'_'.$now_date.'.csv';
+
+        // 書き込み用ファイルを開く
+        $f = fopen($file_name, 'w');
+        if ($f) {
+            // カラムの書き込み
+            mb_convert_variables('SJIS', 'UTF-8', $head);
+            fputcsv($f, $head);
+            // データの書き込み
+            foreach ($articles as $article) {
+            mb_convert_variables('SJIS', 'UTF-8', $article);
+            fputcsv($f, $article);
+            }
+        }
+        // ファイルを閉じる
+        fclose($f);
+
+        // HTTPヘッダ
+        header("Content-Type: application/octet-stream");
+        header('Content-Length: '.filesize($file_name));
+        header('Content-Disposition: attachment; filename='.$file_name);
+        readfile($file_name);
+
+        // ストレージに溜まるCSVデータの削除
+        Storage::disk('public')->delete('csv/'.$title.'_'.$now_date.'.csv');
+
+        // articleGet()と同じ記述
+        $user = Auth::user();
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        } 
+        $article_id = decrypt($request->session()->get('article_id'));
+        $articles = Article::where('id', $article_id)->get();
+        $comments = Comment::where('article_id', $article_id)->get();
+        $user_id = Auth::id();
+        $form = [   'user_id' => $user_id,
+                    'article_id' => $article_id,
+                ];
+        $good = false;
+        if(Article_user::where($form)->exists()) {
+            $good = true;
+        }
+        return view('article', compact('user', 'articles', 'comments', 'good'));
+    }
+
+
+    /* GOODする処理 */
+    public function goodPost(Request $request)
+    {
+        $article_user = new Article_user;
+        $user_id = Auth::id();
+        $article_id = decrypt($request->session()->get('article_id'));
+        $form = [   'user_id' => $user_id,
+                    'article_id' => $article_id,
+                ];
+        if(Article_user::where($form)->exists()) {
+            return redirect('/');
+        }
+        $article_user->fill($form)->save();
+        return redirect('/article')->withInput();
+    }
+
+    /* GOODを外す処理 */
+    public function good_removePost(Request $request)
+    {
+        $user_id = Auth::id();
+        $article_id = decrypt($request->session()->get('article_id'));
+        $form = [   'user_id' => $user_id,
+                    'article_id' => $article_id,
+                ];
+        if( !(Article_user::where($form)->exists()) ) {
+            return redirect('/');
+        }
+        Article_user::where($form)->delete();
+        return redirect('/article')->withInput();
     }
 
 
@@ -142,6 +258,7 @@ class Column_boardController extends Controller
         $user = Auth::user();
         return view('post', compact('user'));
     }
+
 
     public function postPost(Request $request)
     {
@@ -164,6 +281,7 @@ class Column_boardController extends Controller
         return redirect('/post_confirm')->withInput();
     }
 
+
     /* 投稿確認 */
     public function post_confirmGet(Request $request)
     {
@@ -173,6 +291,7 @@ class Column_boardController extends Controller
         $post_data = Session::get('_old_input');
         return view('post_confirm', compact('user', 'post_data'));
     }
+
 
     public function post_confirmPost(Request $request)
     {
@@ -195,6 +314,7 @@ class Column_boardController extends Controller
         return redirect('/');
     }
 
+
     /* 投稿報告 */
     public function post_reportGet(Request $request)
     {
@@ -208,108 +328,183 @@ class Column_boardController extends Controller
         return redirect('/post_report');
     }
 
+
     /* 更新 */
     public function updateGet(Request $request)
     {
+        if($request->session()->has('update_data')) {
+            $request->session()->remove('update_data');
+        }
+
         $user = Auth::user();
-        $article_id = $request->old('article_id');
+
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+
+        $article_id = decrypt($request->session()->get('article_id'));
         $articles = Article::where('id', $article_id)->get();
+        if(!empty(Session::get('_old_input.update_data'))) {
+            $articles = array(Session::get('_old_input.update_data'));
+        }
         return view('update', compact('user', 'articles'));
     }
 
+
     public function updatePost(Request $request)
     {
-        return redirect('/update_confirm')->withInput();
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+        $request->merge(['article_id' => decrypt($request->session()->get('article_id'))]);
+        $request->session()->push('update_data', $request->toArray());
+        return redirect('/update_confirm');
     }
+
 
     /* 更新確認 */
     public function update_confirmGet(Request $request)
     {
         // バリデーション処理
 
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+        if(!($request->session()->has('update_data'))) {
+            return redirect('/');
+        }
+
         $user = Auth::user();
-        $update_data = Session::get('_old_input');
+        $update_data = Session::get('update_data')[0];
         return view('update_confirm', compact('user', 'update_data'));
     }
 
+
     public function update_confirmPost(Request $request)
     {
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+        if(!($request->session()->has('update_data'))) {
+            return redirect('/');
+        }
+
+        $update_data = Session::get('update_data')[0];
+        unset($update_data['_token']);
+
         if($request->has('updateBtn')) {
-            // もしpostで[id]パラメータがないときの処理
-            $user = Auth::user();
-            $article_id = decrypt($request->article_id);
-            if ($article_id == null) {
-                return redirect('/');
-            }
-            $article = Article::find($article_id);
-            $form = $request->all();
-            unset($form['_token']);
-            $article->fill($form)->update();
+            $article = Article::find($update_data['article_id']);
+            $article->fill($update_data)->update();
             // 更新後の画像ファイル.binの扱い（※まずは違う画像を保存→閲覧で観れるか確認）
             return redirect('/update_report')->withInput();
         } else if ($request->has('retryBtn')) {
-            // もどった先でdd()にて値がきていることを確認→old関数を反映？
+            $request->merge(['update_data' => $update_data]);
             return redirect('/update')->withInput();
         }
         return redirect('/');
     }
 
+
     /* 更新報告 */
     public function update_reportGet(Request $request)
     {
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+        if(!($request->session()->has('update_data'))) {
+            return redirect('/');
+        }
+
         $user = Auth::user();
-        $articles = Article::all();
-        return view('update_report', compact('user', 'articles'));
+        return view('update_report', compact('user'));
     }
+
 
     public function update_reportPost(Request $request)
     {
-        return redirect('/update_report');
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+        if(!($request->session()->has('update_data'))) {
+            return redirect('/');
+        }
+
+        if($request->has('restartBtn')) {
+            $update_data = Session::get('update_data')[0];
+            unset($update_data['_token']);
+            $request->merge(['update_data' => $update_data]);
+            return redirect('/update')->withInput();
+        }
+        return redirect('/');
     }
 
 
     /* 削除確認 */
     public function delete_confirmGet(Request $request)
     {
+        if($request->session()->has('delete_data')) {
+            $request->session()->remove('delete_data');
+        }
+
         $user = Auth::user();
-        $article_id = $request->old('article_id');
-        if ($article_id == null) {
+
+        if(!($request->session()->has('article_id'))) {
             return redirect('/');
         }
+
+        $flag_check =Article::where('id', decrypt($request->session()->get('article_id')))->where('delete_flag', 1)->first();
+        if(!(empty($flag_check))) {
+            return redirect('/');
+        }
+
+        $article_id = decrypt($request->session()->get('article_id'));
         $articles = Article::where('id', $article_id)->get();
         return view('delete_confirm', compact('user', 'articles'));
     }
 
+
     public function delete_confirmPost(Request $request)
     {
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+
         if ($request->has('deleteBtn')) {
-            // もしpostで[id]パラメータがないときの処理
             $user = Auth::user();
-            $article_id = decrypt($request->article_id);
-            if ($article_id == null) {
-                return redirect('/');
-            }
+            $article_id = decrypt($request->session()->get('article_id'));
             $field = Article::find($article_id);
             $field->delete_flag = 1;
             $field->save();
+
+            $request->session()->put('delete_data', encrypt($article_id));
             return redirect('/delete_report');
         } else {
             return redirect('/');
         }
+
     }
+
 
     /* 削除報告 */
     public function delete_reportGet(Request $request)
     {
+        if(!($request->session()->has('article_id'))) {
+            return redirect('/');
+        }
+        if(!($request->session()->has('delete_data'))) {
+            return redirect('/');
+        }
+
         $user = Auth::user();
-        $articles = Article::all();
-        return view('delete_report', compact('user', 'articles'));
+        return view('delete_report', compact('user'));
     }
+
 
     public function delete_reportPost(Request $request)
     {
-        return redirect('/delete_report');
+        return redirect('/');
     }
+
 
     /* 退会 */
     public function withdrawalGet(Request $request)
@@ -317,6 +512,7 @@ class Column_boardController extends Controller
         $user = Auth::user();
         return view('withdrawal', compact('user'));
     }
+
 
     public function withdrawalPost(Request $request)
     {
@@ -335,5 +531,6 @@ class Column_boardController extends Controller
             return redirect('/withdrawal');
         }
     }
+
 
 }

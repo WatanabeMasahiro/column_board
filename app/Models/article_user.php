@@ -9,6 +9,11 @@ class Article_user extends Model
 {
     use HasFactory;
 
+    // protected $fillable = ['', '',];
+
+    protected $guarded = [
+        'id',
+    ];
 
     public function article_s()
     {

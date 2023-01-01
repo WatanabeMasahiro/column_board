@@ -5,25 +5,20 @@
 
 
 
-<div class="container">
+<div class="container border-bottom border-2 border-secondary">
 
 
-    <div class="row my-5">
-        <span class="">削除しました。</span>
-        <span class="">削除に失敗しました。</span>
+    <div class="row my-5 text-center">
+        <span class="h4 fw-bold">記事を<br />削除しました</span>
     </div>
-
 
 
 </div>
 
 
 <!-- HOMEへ戻るボタン -->
+<div class="text-center">
 @include('includes.home-return-btn')
-
-<!-- 削除をやり直すボタン -->
-<div class="home-return-button my-4">
-    <a href="/delete" class="btn btn-secondary mx-4 fw-bold">削除を<br />やり直す</a>
 </div>
 
 <!-- トップへ戻るボタン -->

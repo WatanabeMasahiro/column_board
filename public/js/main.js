@@ -6,6 +6,7 @@ $(function() {
     f_formGet_descAnchor();
     f_postDetail_anchor();
     f_nondata_tablebody();
+    f_txtfile_submit();
     f_topReturnBtn();
     f_faEye_toggleSlash();
     f_faEye_toggleSlash_addConfirm();
@@ -105,6 +106,14 @@ $(function() {
             $('.if_nondata_tbody').closest('table').removeClass('table-hover').css('max-width', '500px').css('margin', '0 auto 16px');
             $('.if_nondata_tbody').closest('table').find('thead').remove();
         }
+    }
+
+
+    function f_txtfile_submit() {
+        $('#text_file').on('click', function(e) {
+            e.preventDefault();
+            $('#text_file_form').submit();
+        })
     }
 
 
