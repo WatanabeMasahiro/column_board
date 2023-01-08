@@ -5,30 +5,23 @@
 
 
 
-<div class="container">
+<div class="container border-bottom border-2 border-secondary">
 
-
-    <div class="row my-5">
-        <span class="">投稿しました。</span>
-        <span class="text-secondary">投稿に失敗しました。</span>
+    <div class="row my-5 text-center">
+        <span class="h4 fw-bold">記事を<br />投稿しました</span>
     </div>
-
-
 
 </div>
 
 
 <!-- HOMEへ戻るボタン -->
+<div class="text-center">
 @include('includes.home-return-btn')
-
-<!-- 登録(記事等投稿)をやり直すボタン -->
-<div class="home-return-button my-4">
-    <a href="/post" class="btn btn-secondary mx-4 fw-bold">登録を<br />やり直す</a>
 </div>
+
 
 <!-- トップへ戻るボタン -->
 @include('includes.top-return-btn')
-
 
 
 @include('includes.footer')

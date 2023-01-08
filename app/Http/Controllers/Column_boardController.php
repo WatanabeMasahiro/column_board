@@ -22,9 +22,12 @@ class Column_boardController extends Controller
     /* 記事一覧 */
     public function indexGet(Request $request)
     {
-        if($request->session()->has('article_id')) {
-            $request->session()->remove('article_id');
-        }
+        if($request->session()->has('article_id'))  { $request->session()->remove('article_id'); }
+        if($request->session()->has('post_data'))   { $request->session()->remove('post_data');  }
+        if($request->session()->has('update_data')) { $request->session()->remove('update_data');}
+        if($request->session()->has('delete_data')) { $request->session()->remove('delete_data');}
+        if($request->session()->has('post_img'))    { $request->session()->remove('post_img');   }
+        if($request->session()->has('update_img'))  { $request->session()->remove('update_img'); }
 
         $user = Auth::user();
         $articles = Article::select('articles.*', 'article_users.article_id')
@@ -82,30 +85,128 @@ class Column_boardController extends Controller
     /* ユーザー記事一覧 */
     public function myArticleGet(Request $request)
     {
+        if($request->session()->has('article_id'))  { $request->session()->remove('article_id'); }
+        if($request->session()->has('post_data'))   { $request->session()->remove('post_data');  }
+        if($request->session()->has('update_data')) { $request->session()->remove('update_data');}
+        if($request->session()->has('delete_data')) { $request->session()->remove('delete_data');}
+        if($request->session()->has('post_img'))    { $request->session()->remove('post_img');   }
+        if($request->session()->has('update_img'))  { $request->session()->remove('update_img'); }
+
         $user = Auth::user();
-        $articles = Article::orderBy('id', 'desc')->paginate(5);
-        return view('my-article', compact('user', 'articles'));
+        $articles = Article::select('articles.*', 'article_users.article_id')
+            ->selectRaw('COUNT(article_users.article_id) as favorite_no')
+            ->leftJoin('article_users', 'articles.id', '=', 'article_users.article_id')
+            ->groupBy('articles.id')
+            ->where('delete_flag', 0)
+            ->where('articles.user_id', Auth::id());     // ログインユーザーの投稿した記事に絞る
+
+        // 検索結果の有無で「記事一覧($articles)」の出力結果を変える
+        $search_text = array('search_text' => trim($request->search_text));
+        $request->merge($search_text);
+        $str_search = $request->search_text;
+        $date_desc1 = $request->date_desc1;
+        $date_desc2 = $request->date_desc2;
+        $good_desc1 = $request->good_desc1;
+        $good_desc2 = $request->good_desc2;
+
+        // 検索機能
+        if(!empty($str_search)) {
+            $articles->where(function($articles) use($str_search){
+                $articles->where('content_title', 'like', "%{$str_search}%")
+                    ->orwhere('content', 'like', "%{$str_search}%")
+                    ->orwhere('image_title', 'like', "%{$str_search}%")
+                    ->orwhere('related_word1', 'like', "%{$str_search}%")
+                    ->orwhere('related_word2', 'like', "%{$str_search}%")
+                    ->orwhere('related_word3', 'like', "%{$str_search}%");
+            });
+        }
+
+        // 最新順・グッド順の機能
+        if($date_desc1 == true || $date_desc2 == true) {
+            $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
+        } else if($good_desc1 == true || $good_desc2 == true) {
+            $articles = $articles->orderBy('favorite_no', 'desc')->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        // ページネーション
+        $paginator_currentpage_10limit_over = false;
+        if($articles->currentPage() > 10){
+            $paginator_currentpage_10limit_over = true;
+        }
+        return view('my-article', compact('user', 'articles', 'str_search', 'date_desc1', 'date_desc2', 'good_desc1', 'good_desc2', 'paginator_currentpage_10limit_over'));
     }
 
 
     public function myArticlePost(Request $request)
     {
-        return redirect('/my-article');
+        $request->session()->put('article_id', $request->article_id);
+        return redirect('/my-article')->withInput();
     }
 
 
     /* ユーザーがグッドした記事一覧 */
     public function myGoodArticleGet(Request $request)
     {
+        if($request->session()->has('article_id'))  { $request->session()->remove('article_id'); }
+        if($request->session()->has('post_data'))   { $request->session()->remove('post_data');  }
+        if($request->session()->has('update_data')) { $request->session()->remove('update_data');}
+        if($request->session()->has('delete_data')) { $request->session()->remove('delete_data');}
+        if($request->session()->has('post_img'))    { $request->session()->remove('post_img');   }
+        if($request->session()->has('update_img'))  { $request->session()->remove('update_img'); }
+
         $user = Auth::user();
-        $articles = Article::orderBy('id', 'desc')->paginate(5);
-        return view('my-good-article', compact('user', 'articles'));
+        $articles = Article::select('articles.*', 'article_users.article_id')
+            ->selectRaw('COUNT(article_users.article_id) as favorite_no')
+            ->leftJoin('article_users', 'articles.id', '=', 'article_users.article_id')
+            ->groupBy('articles.id')
+            ->where('delete_flag', 0)
+            ->where('article_users.user_id', Auth::id());     // ログインユーザーのグッドした記事に絞る
+
+        // 検索結果の有無で「記事一覧($articles)」の出力結果を変える
+        $search_text = array('search_text' => trim($request->search_text));
+        $request->merge($search_text);
+        $str_search = $request->search_text;
+        $date_desc1 = $request->date_desc1;
+        $date_desc2 = $request->date_desc2;
+        $good_desc1 = $request->good_desc1;
+        $good_desc2 = $request->good_desc2;
+
+        // 検索機能
+        if(!empty($str_search)) {
+            $articles->where(function($articles) use($str_search){
+                $articles->where('content_title', 'like', "%{$str_search}%")
+                    ->orwhere('content', 'like', "%{$str_search}%")
+                    ->orwhere('image_title', 'like', "%{$str_search}%")
+                    ->orwhere('related_word1', 'like', "%{$str_search}%")
+                    ->orwhere('related_word2', 'like', "%{$str_search}%")
+                    ->orwhere('related_word3', 'like', "%{$str_search}%");
+            });
+        }
+
+        // 最新順・グッド順の機能
+        if($date_desc1 == true || $date_desc2 == true) {
+            $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
+        } else if($good_desc1 == true || $good_desc2 == true) {
+            $articles = $articles->orderBy('favorite_no', 'desc')->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $articles = $articles->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        // ページネーション
+        $paginator_currentpage_10limit_over = false;
+        if($articles->currentPage() > 10){
+            $paginator_currentpage_10limit_over = true;
+        }
+        return view('my-good-article', compact('user', 'articles', 'str_search', 'date_desc1', 'date_desc2', 'good_desc1', 'good_desc2', 'paginator_currentpage_10limit_over'));
     }
 
 
     public function myGoodArticlePost(Request $request)
     {
-        return redirect('/my-good-article');
+        $request->session()->put('article_id', $request->article_id);
+        return redirect('/my-good-article')->withInput();
     }
 
 
@@ -190,13 +291,11 @@ class Column_boardController extends Controller
         }
         // ファイルを閉じる
         fclose($f);
-
         // HTTPヘッダ
         header("Content-Type: application/octet-stream");
         header('Content-Length: '.filesize($file_name));
         header('Content-Disposition: attachment; filename='.$file_name);
         readfile($file_name);
-
         // ストレージに溜まるCSVデータの削除
         Storage::disk('public')->delete('csv/'.$title.'_'.$now_date.'.csv');
 
@@ -255,6 +354,8 @@ class Column_boardController extends Controller
     /* 投稿 */
     public function postGet(Request $request)
     {
+        if($request->session()->has('post_data')) {$request->session()->remove('post_data');}
+        if($request->session()->has('post_img'))  {$request->session()->remove('post_img'); }
         $user = Auth::user();
         return view('post', compact('user'));
     }
@@ -264,20 +365,23 @@ class Column_boardController extends Controller
     {
         // 拡張子つきでファイル名を取得
         if($request->file('image')){
-            $image_name = $request->file('image')->getClientOriginalName();
+
+            $img_filename = $request->file('image')->getClientOriginalName();
             // 拡張子のみ
             $extension = $request->file('image')->getClientOriginalExtension();
             // 新しいファイル名を生成（形式：元のファイル名_ランダムの英数字.拡張子）
-            $new_image_name = pathinfo($image_name, PATHINFO_FILENAME) . "_" . uniqid() . "." . $extension;
-            // tmpフォルダに画像ファイルを移動する
-            $request->file('image')->move(public_path() . "/img/tmp", $new_image_name);
-            $image = "/img/tmp/" . $new_image_name;
-
-            $request->merge(array('image' => $new_image_name));
+            $new_img_filename = pathinfo($img_filename, PATHINFO_FILENAME) . "_" . uniqid() . "." . $extension;
+            // /storage/image/tmpフォルダに画像ファイルを移動する
+            $request->file('image')->move(public_path() . "/storage/image/tmp", $new_img_filename);
+            $img_tmp_filepath = "/storage/image/tmp/" . $new_img_filename;
+            $request->session()->put('post_img',[   'new_img_filename'  => $new_img_filename,
+                                                    'tmp_filepath'      => $img_tmp_filepath]);
         } else {
-            $request->merge(array('image' => null));
+            $request->session()->put('post_img', [  'new_img_filename'  => null,
+                                                    'tmp_filepath'      => null]);
         }
 
+        $request->session()->push('post_data', $request->except('image', '_token'));
         return redirect('/post_confirm')->withInput();
     }
 
@@ -287,30 +391,51 @@ class Column_boardController extends Controller
     {
         // バリデーション処理
 
+        if(!($request->session()->has('post_data'))) {
+            return redirect('/');
+        }
         $user = Auth::user();
-        $post_data = Session::get('_old_input');
+        $post_data = Session::get('post_data')[0];
         return view('post_confirm', compact('user', 'post_data'));
     }
 
 
     public function post_confirmPost(Request $request)
     {
-        if($request->has('postBtn')) {
-            $user = Auth::user();
-            $user_id = array('user_id' => $user->id);
-            $delete_flag = array('delete_flag' => 0);
-            $request->merge($user_id)->merge($delete_flag);
-            $article = new Article;
+        if(!($request->session()->has('post_data'))) {
+            return redirect('/');
+        }
 
-            $form = $request->all();
-            unset($form['_token']);
-            $article->fill($form)->save();
-            // 登録後の画像ファイル.binの扱い（※まずは違う画像を保存→閲覧で観れるか確認）
-            return redirect('/post_report')->withInput();
+        $post_data = Session::get('post_data')[0];
+        unset($post_data['_token']);
+
+        if($request->has('postBtn')) {
+            $post_data = array_merge($post_data, array('user_id' => Auth::id(), 'delete_flag' => 0, 'image' => Session::get('post_img.new_img_filename')));
+            $article = new Article;
+            $article->fill($post_data)->save();
+
+            if( !(empty(Session::get('post_img.new_img_filename')) || empty(Session::get('post_img.new_img_filename'))) ) {
+                // レコードを挿入したときのIDを取得
+                $lastInsertedId = $article->id;
+                // ディレクトリを作成
+                if (!file_exists(public_path() . "/image/" . $lastInsertedId)) {
+                    mkdir(public_path() . "/image/" . $lastInsertedId, 0777);
+                }
+                // 一時保存から本番の格納場所へ移動
+                rename( public_path() . "/storage/image/tmp/" . Session::get('post_img.new_img_filename'),
+                        public_path() . "/image/" . $lastInsertedId . "/" . Session::get('post_img.new_img_filename'));
+                // 一時保存の画像を削除
+                \File::cleanDirectory(public_path() . "/storage/image/tmp");
+            }
+
+            if($request->session()->has('post_img')) { $request->session()->remove('post_img');}
+
+            return redirect('/post_report');
         } else if ($request->has('retryBtn')) {
-            // もどった先でdd()にて値がきていることを確認→old関数を反映？
+            $request->merge($post_data);
             return redirect('/post')->withInput();
         }
+
         return redirect('/');
     }
 
@@ -318,23 +443,28 @@ class Column_boardController extends Controller
     /* 投稿報告 */
     public function post_reportGet(Request $request)
     {
+        if(!($request->session()->has('post_data'))) {
+            return redirect('/');
+        }
+
+        if($request->session()->has('post_data')) {$request->session()->remove('post_data');}
+        if($request->session()->has('post_img'))  {$request->session()->remove('post_img'); }
+
         $user = Auth::user();
-        $articles = Article::all();
-        return view('post_report', compact('user', 'articles'));
+        return view('post_report', compact('user'));
     }
 
     public function post_reportPost(Request $request)
     {
-        return redirect('/post_report');
+        return redirect('/');
     }
 
 
     /* 更新 */
     public function updateGet(Request $request)
     {
-        if($request->session()->has('update_data')) {
-            $request->session()->remove('update_data');
-        }
+        if($request->session()->has('update_data')) {$request->session()->remove('update_data');}
+        if($request->session()->has('update_img'))  {$request->session()->remove('update_img'); }
 
         $user = Auth::user();
 
@@ -356,8 +486,27 @@ class Column_boardController extends Controller
         if(!($request->session()->has('article_id'))) {
             return redirect('/');
         }
+
+        // 拡張子つきでファイル名を取得
+        if($request->file('image')){
+
+            $img_filename = $request->file('image')->getClientOriginalName();
+            // 拡張子のみ
+            $extension = $request->file('image')->getClientOriginalExtension();
+            // 新しいファイル名を生成（形式：元のファイル名_ランダムの英数字.拡張子）
+            $new_img_filename = pathinfo($img_filename, PATHINFO_FILENAME) . "_" . uniqid() . "." . $extension;
+            // /storage/image/tmpフォルダに画像ファイルを移動する
+            $request->file('image')->move(public_path() . "/storage/image/tmp", $new_img_filename);
+            $img_tmp_filepath = "/storage/image/tmp/" . $new_img_filename;
+            $request->session()->put('update_img', ['new_img_filename'  => $new_img_filename,
+                                                    'tmp_filepath'      => $img_tmp_filepath]);
+        } else {
+            $request->session()->put('update_img', ['new_img_filename'  => null,
+                                                    'tmp_filepath'      => null]);
+        }
+
         $request->merge(['article_id' => decrypt($request->session()->get('article_id'))]);
-        $request->session()->push('update_data', $request->toArray());
+        $request->session()->push('update_data', $request->except('image', '_token'));
         return redirect('/update_confirm');
     }
 
@@ -393,11 +542,29 @@ class Column_boardController extends Controller
         unset($update_data['_token']);
 
         if($request->has('updateBtn')) {
+            $update_data = array_merge($update_data, array('image' => Session::get('update_img.new_img_filename')));
             $article = Article::find($update_data['article_id']);
             $article->fill($update_data)->update();
-            // 更新後の画像ファイル.binの扱い（※まずは違う画像を保存→閲覧で観れるか確認）
+
+            if( !(empty(Session::get('update_img.new_img_filename')) || empty(Session::get('update_img.new_img_filename'))) ) {
+                // 記事のIDを取得
+                $article_id = $update_data['article_id'];
+                // ディレクトリを作成
+                if (!file_exists(public_path() . "/image/" . $article_id)) {
+                    mkdir(public_path() . "/image/" . $article_id, 0777);
+                }
+                // 一時保存から本番の格納場所へ移動
+                rename( public_path() . "/storage/image/tmp/" . Session::get('update_img.new_img_filename'),
+                        public_path() . "/image/" . $article_id . "/" . Session::get('update_img.new_img_filename'));
+                // 一時保存の画像を削除
+                \File::cleanDirectory(public_path() . "/storage/image/tmp");
+            }
+
+            if($request->session()->has('update_img'))  {$request->session()->remove('update_img'); }
+
             return redirect('/update_report')->withInput();
         } else if ($request->has('retryBtn')) {
+            unset($update_data['article_id']);
             $request->merge(['update_data' => $update_data]);
             return redirect('/update')->withInput();
         }
@@ -414,6 +581,8 @@ class Column_boardController extends Controller
         if(!($request->session()->has('update_data'))) {
             return redirect('/');
         }
+
+        if($request->session()->has('update_img'))  {$request->session()->remove('update_img'); }
 
         $user = Auth::user();
         return view('update_report', compact('user'));
@@ -432,6 +601,7 @@ class Column_boardController extends Controller
         if($request->has('restartBtn')) {
             $update_data = Session::get('update_data')[0];
             unset($update_data['_token']);
+            unset($update_data['article_id']);
             $request->merge(['update_data' => $update_data]);
             return redirect('/update')->withInput();
         }

@@ -34,7 +34,6 @@
     <div class="row mt-3 mx-1">
         <div class="d-none d-sm-block">     <!-- d-sm以上 -->
             <table class="table table-hover border border-5 border-secondary fw-bold min_fontsize1" style="background:#cacad0;">
-            @unless( $paginator_currentpage_10limit_over )
                 <thead class="bg-secondary">
                     <tr class="desc-title-row">
                         <th colspan="1" style="width: 80px;" class="date_desc_anchor">
@@ -48,8 +47,9 @@
                         <th colspan="10" style="background-color: #e0d8d8;"></th>
                     </tr>
                 </thead>
+            @unless( $paginator_currentpage_10limit_over )
                 <tbody class="if_nondata_tbody">
-                    @foreach ($articles as $article)
+                    @forelse ($articles as $article)
                     <tr class="recordData_content">
                         <td class="d-none">
                             <span>記事No:</span><br /><span class="article_id">{{encrypt($article->id)}}</span>
@@ -59,11 +59,11 @@
                             </form>
                         </td>
                         <td colspan="10" class="py-3">
-                            <div class="p-1 mb-1" style="background-color:#f5f5f5;">
+                            <div class="p-1 mb-1" style="background-color:#f5f5f5; min-width:400px;">
                                 <span style="background-color:silver;" class="px-2 rounded-circle me-1">題名</span>
                                 <span>{{mb_strimwidth(strip_tags( $article->content_title ),0,50,'…','UTF-8')}}</span>
                             </div>
-                            <div class="p-1 pb-2" style="background-color:#f5f5f5; line-height: 0.6em;">
+                            <div class="p-1 pb-2" style="background-color:#f5f5f5; min-width:400px; line-height: 0.6em;">
                                 <p class="pt-2 mb-2"><span style="background-color:silver;" class="px-2 rounded-circle">本文</span></p>
                                 <span class="new-line min_fontsize_0_6em">{{mb_strimwidth(strip_tags( $article->content ),0,500,'…【続く】','UTF-8')}}</span>
                             </div>
@@ -75,12 +75,20 @@
                             <div><i class="fa-solid fa-thumbs-up" style="color:darkorange;"></i><span style="margin-left:2px;">{{$article->article_users->count()}}</span></div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr class="bg-white">
+                        <td colspan="12">
+                            <div class="if_nondata_div text-center fw-bold fs-4">記事がありません</div>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             @else
                 <tbody class="if_nondata_tbody">
-                    <tr>
-                        <td class="text-center">記事がありません</td>
+                    <tr class="bg-white">
+                        <td colspan="12">
+                            <div class="if_nondata_div text-center fw-bold fs-4">記事がありません</div>
+                        </td>
                     </tr>
                 </tbody>
             @endunless
@@ -89,7 +97,6 @@
 
         <div class="d-sm-none">     <!-- d-sm以下 -->
             <table class="table table-hover border border-5 border-secondary fw-bold min_fontsize1" style="background:#cacad0; margin: 8px auto 20px;">
-            @unless( $paginator_currentpage_10limit_over )
                 <thead class="bg-secondary">
                     <tr class="desc-title-row">
                         <th colspan="1" style="width: 50px;" class="date_desc_anchor min_fontsize_0_7em">
@@ -103,8 +110,9 @@
                         <th colspan="10" style="background-color: #e0d8d8;"></th>
                     </tr>
                 </thead>
+            @unless( $paginator_currentpage_10limit_over )
                 <tbody class="if_nondata_tbody">
-                    @foreach ($articles as $article)
+                    @forelse ($articles as $article)
                     <tr class="recordData_content">
                         <td class="d-none">
                             <span>記事No:</span><br /><span class="article_id">{{encrypt($article->id)}}</span>
@@ -130,12 +138,20 @@
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr class="bg-white">
+                        <td colspan="12">
+                            <div class="if_nondata_div text-center fw-bold fs-4">記事がありません</div>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             @else
                 <tbody class="if_nondata_tbody">
-                    <tr>
-                        <td class="text-center">記事がありません</td>
+                    <tr class="bg-white">
+                        <td colspan="12">
+                            <div class="if_nondata_div text-center fw-bold fs-4">記事がありません</div>
+                        </td>
                     </tr>
                 </tbody>
             @endunless

@@ -112,7 +112,7 @@ return [
     'starts_with'           => ':attributeを:valuesから始まるよう入力してください。',
     'string'                => ':attributeは門司で入力してください。',
     'timezone'              => ':attributeを正しいタイムゾーンで入力してください。',
-    'unique'                => ':attributeは既に取得されているため、違うものを入力してください。',
+    'unique'                => 'この:attributeは使用できません。違うものを入力してください。',
     'uploaded'              => ':attributeはアップロードに失敗しました。',
     'url'                   => ':attributeを正しいURLで入力してください。',
     'uuid'                  => ':attributeを正しいUUIDで入力してください。',

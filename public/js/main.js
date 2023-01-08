@@ -17,6 +17,7 @@ $(function() {
     f_user_login_form()
     f_user_register_form();
     f_flashingWarning();
+    f_pagination_limit10();
 
 
     function f_navBar() {
@@ -99,12 +100,20 @@ $(function() {
 
 
     function f_nondata_tablebody() {
-        if($('.if_nondata_tbody').length == true && $('.if_nondata_tbody').find('tr').length == false) {
-            $('.if_nondata_tbody').append('<tr><td class="text-center" style="padding-top: 10.5px;">記事がありません</td></tr>');
+        function convertStrToBool(str){
+            if (typeof str != 'string') { return Boolean(str); }
+            try {
+                var obj = JSON.parse(str.toLowerCase());
+                return obj == true;
+            } catch(e) {
+                return str != '';
+            }
         }
-        if($('.if_nondata_tbody').find('td').text() == '記事がありません') {
-            $('.if_nondata_tbody').closest('table').removeClass('table-hover').css('max-width', '500px').css('margin', '0 auto 16px');
-            $('.if_nondata_tbody').closest('table').find('thead').remove();
+        if(convertStrToBool($('.if_nondata_tbody').length) == true && convertStrToBool($('.if_nondata_tbody').find('tr').length) == false) {
+            $('.if_nondata_tbody').append('<tr class="bg-white"><td colspan="12"><div class="text-center fw-bold fs-4">記事がありません</div></td></tr>');
+        }
+        if(convertStrToBool($('.if_nondata_tbody').find('.if_nondata_div').length) == true) {
+            $('.if_nondata_tbody').closest('table').removeClass('table-hover');
         }
     }
 
@@ -256,6 +265,16 @@ $(function() {
         setTimeout(function(){
             $('.flashingWarning').animate({opacity:0, height: 0}, 1000);
         }, 10000)
+    }
+
+
+    function f_pagination_limit10() {
+        $('.page-link').each(function(i, element) {
+            if(i > 10 ) {
+                if($(element).text() == "›") {return false;}
+                $(element).parent().remove();
+            }
+        })
     }
 
 

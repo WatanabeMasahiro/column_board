@@ -15,7 +15,7 @@
 
     <div class="row">
         <div class="bg-info">{{$post_data['content_title']}}</div>
-        <div class="bg-secondary">{{$post_data['content']}}</div>
+        <div class="bg-secondary pre-wrap">{{$post_data['content']}}</div>
     </div>
 
 
@@ -24,11 +24,14 @@
             <th>画像タイトル：</th>
             <td>{{$post_data['image_title']}}</td>
         </tr>
+        @if(!empty(Session::get('post_img.tmp_filepath')))
         <tr>
             <th>画像：</th>
-            <td>{{$post_data['image']}}</td>
+            <td>
+                <div><img src="{{Session::get('post_img.tmp_filepath')}}" alt="確認用画像" width="300px" height="200px" class="img-fluid" /></div>
+            </td>
         </tr>
-
+        @endif
         <tr>
             <th>関連ワード①</th>
             <td>{{$post_data['related_word1']}}</td>
@@ -45,13 +48,6 @@
 
     <form action="post_confirm" method="POST" enctype=“multipart/form-data”>
         @csrf
-        <input type="hidden" name="content_title" value="{{$post_data['content_title']}}" />
-        <input type="hidden" name="content" value="{{$post_data['content']}}" />
-        <input type="hidden" name="image_title" value="{{$post_data['image_title']}}" />
-        <input type="hidden" name="image" value="{{$post_data['image']}}" />
-        <input type="hidden" name="related_word1" value="{{$post_data['related_word1']}}" />
-        <input type="hidden" name="related_word2" value="{{$post_data['related_word2']}}" />
-        <input type="hidden" name="related_word3" value="{{$post_data['related_word3']}}" />
         <button type="submit" name="postBtn" class="btn btn-secondary me-2">投稿</button>
         <input type="submit" name="retryBtn" value="やり直す" class="ms-2" />
     </form>

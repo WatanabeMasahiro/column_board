@@ -42,7 +42,7 @@
         <div class="mb-4">
             <form action="article" method="POST">
                 @csrf
-                <button type="submit" name="updateBtn" class="btn btn-success me-4 text-dark fw-bold min_fontsize_0_8em">この記事を<br />更新</button>
+                <button type="submit" name="updateBtn" class="btn btn-success me-4 text-dark fw-bold min_fontsize_0_8em">この記事を<br />改稿</button>
                 <button type="submit" name="deleteBtn" class="btn btn-danger text-dark ms-4 fw-bold min_fontsize_0_8em">この記事を<br />削除</button>
             </form>
         </div>
@@ -94,10 +94,13 @@
                     <tr>
                         <td class="px-5" colspan="12"><span class="new-line min_fontsize_0_9em">{{$article->content}}</span></td>
                     </tr>
+                    @if(!empty($article->image))
                     <tr>
-                        <!-- <td class="px-2 text-center" colspan="12"><div><img src="{{ asset('/D1000148.JPG') }}" alt="image" width="300px" height="200px" /></div></td> -->
-                        <td class="px-2 text-center" colspan="12"><div>{{$article->image}}</div></td>
+                        <td class="px-2 text-center" colspan="12">
+                            <div><img src="{{ asset('image/' . $article->id . '/' . $article->image) }}" alt="この記事の画像" width="300px" height="200px" class="img-fluid img-thumbnail" /></div>
+                        </td>
                     </tr>
+                    @endif
                     <tr>
                         <td class="px-2" colspan="12">
                             <p class="my-0 border-bottom border-2">関連ワード①：　{{$article->related_word1}}</p>
@@ -127,10 +130,13 @@
                     <tr>
                         <td class="px-2" colspan="12"><span class="new-line min_fontsize_0_8em">{{$article->content}}</span></td>
                     </tr>
+                    @if(!empty($article->image))
                     <tr>
-                        <!-- <td class="px-2 text-center" colspan="12"><div><img src="{{ asset('/D1000148.JPG') }}" alt="image" width="300px" height="200px" /></div></td> -->
-                        <td class="px-2 text-center" colspan="12"><div>{{$article->image}}</div></td>
+                        <td class="px-2 text-center" colspan="12">
+                            <div><img src="{{ asset('image/' . $article->id . '/' . $article->image) }}" alt="この記事の画像" width="300px" height="200px" class="img-fluid img-thumbnail" /></div>
+                        </td>
                     </tr>
+                    @endif
                     <tr>
                         <td class="px-2" colspan="12">
                             <p class="my-0 border-bottom border-2">関連ワード①：　{{$article->related_word1}}</p>

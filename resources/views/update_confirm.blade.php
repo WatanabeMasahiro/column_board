@@ -15,7 +15,7 @@
 
     <div class="row">
         <div class="bg-info">{{$update_data['content_title']}}</div>
-        <div class="bg-secondary">{{$update_data['content']}}</div>
+        <div class="bg-secondary pre-wrap">{{$update_data['content']}}</div>
     </div>
 
 
@@ -24,11 +24,14 @@
             <th>画像タイトル：</th>
             <td>{{$update_data['image_title']}}</td>
         </tr>
+        @if(!empty(Session::get('update_img.tmp_filepath')))
         <tr>
             <th>画像：</th>
-            <td>{{$update_data['image']}}</td>
+            <td>
+                <div><img src="{{Session::get('update_img.tmp_filepath')}}" alt="確認用画像" width="300px" height="200px" class="img-fluid" /></div>
+            </td>
         </tr>
-
+        @endif
         <tr>
             <th>関連ワード①</th>
             <td>{{$update_data['related_word1']}}</td>

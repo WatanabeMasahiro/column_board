@@ -9,7 +9,7 @@
 
     <div style="max-width:500px; margin: 30px auto;">
         @foreach($articles as $article)
-        <form action="update" method="POST">
+        <form action="update" method="POST" enctype="multipart/form-data">
         @csrf
             <div class="row mb-2">
                 <label class=""><span class="text-danger">※</span>タイトル：</label>
@@ -17,7 +17,7 @@
             </div>
             <div class="row mb-3">
                 <label class=""><span class="text-danger">※</span>本文：</label>
-                <textarea class="" name="content" class="ps-2" required>{{$article['content']}}</textarea>
+                <textarea class="" rows="8" name="content" class="ps-2" required>{{$article['content']}}</textarea>
             </div>
 
             <div class="row mb-2">
@@ -26,7 +26,7 @@
             </div>
             <div class="row mb-3">
                 <label class="">画像：</label>
-                <input type="file" name="image" class="ps-2" value="{{$article['image']}}" />
+                <input type="file" name="image" class="ps-2" />
             </div>
             <div class="mb-4">
                 <div class="row mb-1 w-50">

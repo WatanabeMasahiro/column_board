@@ -104,6 +104,12 @@ body {
 }
 
 
+/* pre-wrap */
+.pre-wrap {
+    white-space: pre-wrap;
+}
+
+
 .article-view-table {
     overflow: hidden scroll;
 }

@@ -12,16 +12,16 @@
         @csrf
             <div class="row mb-2">
                 <label class=""><span class="text-danger">※</span>タイトル：</label>
-                <input type="text" name="content_title" class="ps-2" required />
+                <input type="text" name="content_title" value="{{old('content_title')}}" class="ps-2" required />
             </div>
             <div class="row mb-3">
                 <label class=""><span class="text-danger">※</span>本文：</label>
-                <textarea class="" name="content" class="ps-2" required></textarea>
+                <textarea class="" rows="8" name="content" class="ps-2" required>{{old('content')}}</textarea>
             </div>
 
             <div class="row mb-2">
                 <label class="">画像タイトル：</label>
-                <input type="text" name="image_title" class="ps-2" />
+                <input type="text" name="image_title" value="{{old('image_title')}}" class="ps-2" />
             </div>
             <div class="row mb-3">
                 <label class="">画像：</label>
@@ -30,15 +30,15 @@
             <div class="mb-4">
                 <div class="row mb-1 w-50">
                     <label class="">関連ワード①：</label>
-                    <input type="text" name="related_word1" class="ps-2" />
+                    <input type="text" name="related_word1" value="{{old('related_word1')}}" class="ps-2" />
                 </div>
                 <div class="row mb-1 w-50">
                     <label class="">関連ワード②：</label>
-                    <input type="text" name="related_word2" class="ps-2" />
+                    <input type="text" name="related_word2" value="{{old('related_word2')}}" class="ps-2" />
                 </div>
                 <div class="row mb-1 w-50">
                     <label class="">関連ワード③：</label>
-                    <input type="text" name="related_word3" class="ps-2" />
+                    <input type="text" name="related_word3" value="{{old('related_word3')}}" class="ps-2" />
                 </div>
             </div>
             <div>
