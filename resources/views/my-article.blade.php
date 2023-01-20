@@ -27,6 +27,9 @@
     <div class="mt-5 mb-2 text-center">
         <input form="syncer" type="search" name="search_text" value="{{$str_search}}" placeholder="Search for..." class="search_text mt-1" style="width: 160px; padding-left:5px;" />
         <button form="syncer" type="submit" name="search_btn" class="search_btn btn btn-sm btn-primary mb-1" alt="検索" title="検索" style="transform: scale(-1, 1); margin-bottom: 2px;"><i class="fas fa-search"></i></button>
+        @if(isset($vali_msg))
+        <p class="min_fontsize_0_8em text-center text-danger my-0">{{$vali_msg}}</p>
+        @endif
     </div>
 
 

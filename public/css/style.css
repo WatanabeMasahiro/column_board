@@ -36,6 +36,16 @@ body {
 }
 
 
+/* 最新順 */
+.date_desc_anchor {
+    cursor: pointer;
+}
+
+/* グッド順 */
+.good_desc_anchor {
+    cursor: pointer;
+}
+
 /* トップへ戻るボタン */
 #topReturnBtn {
     position: fixed;

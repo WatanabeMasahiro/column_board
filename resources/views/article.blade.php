@@ -18,9 +18,13 @@
         @endunless
     </div>
 
+    <!-- *** コメントのバリデーションのエラーメッセージ *** -->
+    @error('comment')
+    <div class="flashingWarning text-danger text-center my-0">{{$message}}</div>
+    @enderror
     <!-- *** コメント投稿時の表示テキスト *** -->
-    @if(old('comment-btn') == true)
-    <div class="flashingWarning text-primary text-center h4 my-0">コメントを投稿しました。</div>
+    @if(session('comment_success'))
+    <div class="flashingWarning text-primary text-center h4 my-0">{{session('comment_success')}}</div>
     @endif
 
 
@@ -78,7 +82,7 @@
     <!-- *** 記事閲覧テーブル *** -->
     <div class="article-view-table table-responsive mt-3 mx-1">
         <div class="d-none d-md-block">     <!-- d-md以上 -->
-            <table class="table table-hover border border-5 border-secondary fw-bold" style="background:#cacad0;">
+            <table class="table border border-5 border-secondary fw-bold" style="background:#cacad0;">
                 @foreach ($articles as $article)
                 <thead class="bg-secondary">
                     <tr class="desc-title-row min_fontsize_0_6em">
@@ -97,7 +101,12 @@
                     @if(!empty($article->image))
                     <tr>
                         <td class="px-2 text-center" colspan="12">
-                            <div><img src="{{ asset('image/' . $article->id . '/' . $article->image) }}" alt="この記事の画像" width="300px" height="200px" class="img-fluid img-thumbnail" /></div>
+                            <div>
+                                <figure class="my-0">
+                                    <img src="{{ asset('image/' . $article->id . '/' . $article->image) }}" alt="この記事の画像" width="300px" height="200px" class="img-fluid img-thumbnail" />
+                                    <figcaption class="min_fontsize_0_8em">{{$article->image_title}}</figcaption>
+                                </figure>
+                            </div>
                         </td>
                     </tr>
                     @endif
@@ -114,7 +123,7 @@
         </div>
 
         <div class="d-md-none">     <!-- d-md以下 -->
-            <table class="table table-hover border border-5 border-secondary fw-bold my-0" style="background:#cacad0;">
+            <table class="table border border-5 border-secondary fw-bold my-0" style="background:#cacad0;">
                 @foreach ($articles as $article)
                 <thead class="bg-secondary">
                     <tr class="desc-title-row min_fontsize_0_6em">
@@ -133,7 +142,12 @@
                     @if(!empty($article->image))
                     <tr>
                         <td class="px-2 text-center" colspan="12">
-                            <div><img src="{{ asset('image/' . $article->id . '/' . $article->image) }}" alt="この記事の画像" width="300px" height="200px" class="img-fluid img-thumbnail" /></div>
+                            <div>
+                                <figure class="my-0">
+                                    <img src="{{ asset('image/' . $article->id . '/' . $article->image) }}" alt="この記事の画像" width="300px" height="200px" class="img-fluid img-thumbnail" />
+                                    <figcaption class="min_fontsize_0_8em">{{$article->image_title}}</figcaption>
+                                </figure>
+                            </div>
                         </td>
                     </tr>
                     @endif
@@ -150,18 +164,24 @@
         </div>
     </div>
 
+
     <!-- コメント -->
     <div class="d-none d-sm-block">     <!-- d-sm以上 -->
         <div class="my-4 comment-border">
             <div>
                 <p class="comment-title px-2 fw-bold">▼コメント(最新順)</p>
                 @forelse ($comments as $comment)
-                <div class="new-line px-2 my-4" style="background-color:antiquewhite;">{{($comment->comment)}}</div>
+                    @foreach ($articles as $article)
+                        @if($article->user_id == $comment->user_id)
+                        <div class="new-line p-2 my-4 lh-1 text-primary" style="background-color:antiquewhite;"><i class="fa-solid fa-star text-danger mb-1"></i><br />{{($comment->comment)}}</div>
+                        @else
+                        <div class="new-line p-2 my-4 lh-1" style="background-color:antiquewhite;">{{($comment->comment)}}</div>
+                        @endif
+                    @endforeach
                 @empty
                 <div class="bg-secondary p-2 my-5 h3">コメントがありません。</div>
                 @endforelse
             </div>
-
             <!-- コメントフォーム -->
             <div class="mt-4 ps-2 pb-3 comment-form">
                 <p class="fw-bold">▼コメント入力</p>
@@ -179,17 +199,23 @@
             </div>
         </div>
     </div>
+
     <div class="d-sm-none">     <!-- d-sm以下 -->
         <div class="my-4 comment-border-sm">
             <div>
                 <p class="comment-title px-2 fw-bold">▼コメント(最新順)</p>
                 @forelse ($comments as $comment)
-                <div class="new-line px-2 my-4" style="background-color:antiquewhite;">{{($comment->comment)}}</div>
+                    @foreach ($articles as $article)
+                        @if($article->user_id == $comment->user_id)
+                        <div class="new-line p-2 my-4 lh-1 text-primary" style="background-color:antiquewhite;"><i class="fa-solid fa-star text-danger mb-1"></i><br />{{($comment->comment)}}</div>
+                        @else
+                        <div class="new-line p-2 my-4 lh-1" style="background-color:antiquewhite;">{{($comment->comment)}}</div>
+                        @endif
+                    @endforeach
                 @empty
                 <div class="bg-secondary p-2 my-5 h3">コメントがありません。</div>
                 @endforelse
             </div>
-
             <!-- コメントフォーム -->
             <div class="mt-4 ps-2 pb-3 comment-form">
                 <p class="fw-bold">▼コメント入力</p>

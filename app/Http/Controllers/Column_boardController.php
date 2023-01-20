@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Session;
+use Validator;
 use App\Models\Article;
 use App\Models\Article_user;
 use App\Models\Comment;
 use Illuminate\Http\Request;
-use Session;
+use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdateRequest;
+use App\Http\Requests\CommentRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -135,6 +139,16 @@ class Column_boardController extends Controller
         if($articles->currentPage() > 10){
             $paginator_currentpage_10limit_over = true;
         }
+
+        //クエリ文字列のバリデータ
+        $validator = Validator::make($request->query(), [
+            'search_text' => 'max:30',
+        ]);
+        if ($validator->fails()) {
+            $vali_msg = 'およそ30文字以内で入力して下さい';
+            return view('my-article', compact('user', 'articles', 'str_search', 'date_desc1', 'date_desc2', 'good_desc1', 'good_desc2', 'paginator_currentpage_10limit_over', 'vali_msg'));
+        }
+
         return view('my-article', compact('user', 'articles', 'str_search', 'date_desc1', 'date_desc2', 'good_desc1', 'good_desc2', 'paginator_currentpage_10limit_over'));
     }
 
@@ -247,17 +261,20 @@ class Column_boardController extends Controller
 
 
     /* コメント */
-    public function commentPost(Request $request)
+    public function commentPost(CommentRequest $request)
     {
         if(!($request->session()->has('article_id'))) {
             return redirect('/');
         } 
         $article_id = array('article_id' => decrypt($request->session()->get('article_id')));
         $request->merge($article_id);
+        $user_id = array('user_id' => Auth::id());
+        $request->merge($user_id);
         $comment = new Comment;
         $form = $request->all();
         unset($form['_token']);
         $comment->fill($form)->save();
+        $request->session()->flash('comment_success', 'コメントを投稿しました。');
         return redirect('/article')->withInput();
     }
 
@@ -361,7 +378,7 @@ class Column_boardController extends Controller
     }
 
 
-    public function postPost(Request $request)
+    public function postPost(PostRequest $request)
     {
         // 拡張子つきでファイル名を取得
         if($request->file('image')){
@@ -481,7 +498,7 @@ class Column_boardController extends Controller
     }
 
 
-    public function updatePost(Request $request)
+    public function updatePost(UpdateRequest $request)
     {
         if(!($request->session()->has('article_id'))) {
             return redirect('/');
@@ -688,14 +705,16 @@ class Column_boardController extends Controller
     {
         if ($request->has('withdrawalBtn')) {
             $user = Auth::user();
+            $user->delete();
             Auth::logout();
-            // $user->where('id', $user->id)->delete(); /*** <-これは物理削除 ***/
-            $param = [
-                'name'              => 'withdrawing_member',
-                'email'             => 'withdrawal@withdrawal',
-                'withdrawal_flag'   => 1,
-            ];
-            $user->where('id', $user->id)->update($param);
+            // // $user->where('id', $user->id)->delete(); /*** <-これは物理削除 ***/
+            // $param = [
+            //     'name'              => 'withdrawing_member',
+            //     'email'             => 'withdrawal@withdrawal',
+            //     'password'          => null,
+            //     'withdrawal_flag'   => 1,
+            // ];
+            // $user->where('id', $user->id)->update($param);
             return redirect('/');
         } else {
             return redirect('/withdrawal');
