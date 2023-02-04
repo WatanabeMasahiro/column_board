@@ -2,7 +2,7 @@
 
 <div class="container-fluid text-center pt-3 my-3 w-75 border-top border-2 border-secondary">
     <div class="row">
-        <p class="mt-3"><b>Copyright - M-Watanabe, 2022.</b></p>
+        <p class="mt-3"><b>Copyright - M-Watanabe, 2023.</b></p>
     </div>
 </div>
 

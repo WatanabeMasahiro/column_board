@@ -707,14 +707,6 @@ class Column_boardController extends Controller
             $user = Auth::user();
             $user->delete();
             Auth::logout();
-            // // $user->where('id', $user->id)->delete(); /*** <-これは物理削除 ***/
-            // $param = [
-            //     'name'              => 'withdrawing_member',
-            //     'email'             => 'withdrawal@withdrawal',
-            //     'password'          => null,
-            //     'withdrawal_flag'   => 1,
-            // ];
-            // $user->where('id', $user->id)->update($param);
             return redirect('/');
         } else {
             return redirect('/withdrawal');

@@ -7,6 +7,10 @@
 
 <div class="container border-bottom border-2 border-secondary">
 
+    <div class="row">
+        <span class="text-center my-3">以下の記事を削除します。<br />宜しいですか??</span>
+    </div>
+
     <!-- *** 記事の表示確認テーブル *** -->
     <div class="article-view-table table-responsive my-4">
 

@@ -11,8 +11,6 @@
         <span class="text-center my-3">以下の内容で更新します。<br />宜しいですか??</span>
     </div>
 
-
-
     <!-- *** 記事の表示確認テーブル *** -->
     <div class="article-view-table table-responsive my-4">
 

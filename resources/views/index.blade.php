@@ -167,9 +167,11 @@
 
 
 <!-- 退会ページボタン -->
+@if( Auth::check() )
 <div class="withdrawal-button my-4">
     <a href="/withdrawal" class="btn btn-sm mx-4 bg-warning fw-bold">ユーザー<br />退会ページ</a>
 </div>
+@endif
 
 
 <!-- トップへ戻るボタン -->

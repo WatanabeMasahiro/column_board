@@ -77,8 +77,8 @@
 
             <!-- HOMEまたはログイン画面へ戻るボタン -->
             <div class="home-return-button my-4">
-                <a href="/" class="btn btn-warning mx-4 fw-bold">HOMEへ<br />戻る</a>
-                <a href="/login" class="btn btn-success mx-4 fw-bold">ログイン画面へ<br />戻る</a>
+                <a href="/" class="btn btn-sm btn-warning mx-4 fw-bold">HOMEへ<br />戻る</a>
+                <a href="/login" class="btn btn-sm btn-success mx-4 fw-bold">ログイン画面へ<br />戻る</a>
             </div>
 
         </div>
